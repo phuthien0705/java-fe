@@ -1,6 +1,6 @@
 import { getAllAuthor } from '@/apis/author.api';
 import { useQuery } from 'react-query';
-import { AUTHORS } from '../constants/queryKeyName';
+import { AUTHORS } from '../../constants/queryKeyName';
 
 const useGetListAuthor = (
   page: number,

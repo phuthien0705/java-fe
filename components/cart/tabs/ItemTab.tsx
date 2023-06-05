@@ -15,13 +15,14 @@ import ItemTable from '../ItemTable';
 import ItemTableMobile from '../ItemTableMobile';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import LinearProgress from '@mui/material/LinearProgress';
+import { IEachCartData } from '@/interfaces/compontents/cart.interface';
 
 const ItemTab: React.FunctionComponent<{
-  data: any;
+  data: IEachCartData[];
   refetch: () => void;
   isLoading: boolean;
   isFetching: boolean;
-}> = ({ data, refetch, isLoading, isFetching }) => {
+}> = ({ data, refetch, isLoading }) => {
   const matches = useMediaQuery('(min-width:900px)');
 
   const [showConfirmModal, setShowConfirmModal] = useState<any>(null);
@@ -36,7 +37,7 @@ const ItemTab: React.FunctionComponent<{
     [dispatch]
   );
   const { mutate: updateCartFunc, isLoading: isUpdating } = useMutation(
-    (data: { book_id: number; quantity: number }) => updateCart(data),
+    (data: { bookId: string; quantity: number }) => updateCart(data),
     {
       onSuccess: () => {
         refetch();
@@ -50,7 +51,7 @@ const ItemTab: React.FunctionComponent<{
     }
   );
   const { mutate: removeFunc, isLoading: isRemoving } = useMutation(
-    (data: { book_id: number }) => removeFormCart(data),
+    (data: { bookId: string }) => removeFormCart(data),
     {
       onSuccess: () => {
         refetch();
@@ -65,8 +66,8 @@ const ItemTab: React.FunctionComponent<{
   );
 
   const { mutate: checkItemFunc, isLoading: isCheckingItem } = useMutation(
-    ({ book_id, is_checked }: { book_id: number; is_checked: boolean }) =>
-      addCheckedItem({ book_id, is_checked }),
+    ({ bookId, isChecked }: { bookId: string; isChecked: boolean }) =>
+      addCheckedItem({ bookId, isChecked }),
     {
       onSuccess: () => {
         refetch();
@@ -80,8 +81,7 @@ const ItemTab: React.FunctionComponent<{
     }
   );
   const { mutate: checkAllItemFunc } = useMutation(
-    ({ is_checked }: { is_checked: boolean }) =>
-      addAllCheckedItem({ is_checked }),
+    ({ isChecked }: { isChecked: boolean }) => addAllCheckedItem({ isChecked }),
     {
       onSuccess: () => {
         refetch();
@@ -106,24 +106,24 @@ const ItemTab: React.FunctionComponent<{
     },
   });
   const handleIncreaseQuantity = useCallback(
-    (book_id: number) => {
-      data?.forEach((item: any) => {
-        if (item?.book_id === book_id) {
-          updateCartFunc({ book_id: book_id, quantity: item.quantity + 1 });
+    (bookId: string) => {
+      data?.forEach((item: IEachCartData) => {
+        if (item?.bookId === bookId) {
+          updateCartFunc({ bookId: bookId, quantity: item.quantity + 1 });
         }
       });
     },
     [data, updateCartFunc]
   );
   const handleDecreaseQuantity = useCallback(
-    (book_id: number) => {
-      const decreaseItem = data.find((item: any) => item.book_id === book_id);
+    (bookId: string) => {
+      const decreaseItem = data.find((item: any) => item.bookId === bookId);
       if (decreaseItem?.quantity === 1) {
-        setShowConfirmModal(decreaseItem && decreaseItem?.book_id);
+        setShowConfirmModal(decreaseItem && decreaseItem?.bookId);
       } else {
         data.forEach((item: any) => {
-          if (item?.book_id === book_id) {
-            updateCartFunc({ book_id: book_id, quantity: item.quantity - 1 });
+          if (item?.bookId === bookId) {
+            updateCartFunc({ bookId: bookId, quantity: item.quantity - 1 });
           }
         });
       }
@@ -131,8 +131,8 @@ const ItemTab: React.FunctionComponent<{
     [data, updateCartFunc]
   );
   const handleDelete = useCallback(
-    (book_id: number) => {
-      removeFunc({ book_id: book_id });
+    (bookId: string) => {
+      removeFunc({ bookId });
     },
     [removeFunc]
   );
@@ -148,7 +148,7 @@ const ItemTab: React.FunctionComponent<{
       <Grid item xs={12}>
         {matches ? (
           <ItemTable
-            items={data || []}
+            items={data}
             handleIncreaseQuantity={handleIncreaseQuantity}
             handleDecreaseQuantity={handleDecreaseQuantity}
             handleDelete={handleDelete}
@@ -158,7 +158,7 @@ const ItemTab: React.FunctionComponent<{
           />
         ) : (
           <ItemTableMobile
-            items={data || []}
+            items={data}
             handleIncreaseQuantity={handleIncreaseQuantity}
             handleDecreaseQuantity={handleDecreaseQuantity}
             handleDelete={handleDelete}

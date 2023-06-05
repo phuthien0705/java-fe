@@ -6,10 +6,8 @@ import {
   InputLabel,
   OutlinedInput,
   Stack,
-  TextField,
   useTheme,
 } from '@mui/material';
-import { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
@@ -60,8 +58,8 @@ const SecurityTab: React.FunctionComponent = () => {
             }
 
             await updatePassword({
-              old_password: values.old_password,
-              new_password: values.new_password,
+              oldPassword: values.old_password,
+              newPassword: values.new_password,
             });
 
             setStatus({ success: true });

@@ -1,25 +1,28 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { FormattedMessage } from 'react-intl';
 import {
   Box,
-  Container,
-  Paper,
-  Link,
-  Typography,
   IconButton,
+  Link,
+  MenuItem,
+  Select,
   Stack,
+  Typography,
+  useTheme,
 } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import LogoSection from '../LogoSection';
-import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Footer = () => {
+  const theme = useTheme();
   const matches = useMediaQuery('(min-width:750px)');
-  const matches2 = useMediaQuery('(max-width:815px)');
-
-  const theme: any = useTheme();
+  const { locales, locale, asPath, push } = useRouter();
+  const [currentLocale, setCurrentLocale] = useState(locale ?? 'vi');
   return (
     <Box
       sx={{
@@ -38,18 +41,19 @@ const Footer = () => {
         },
       }}
     >
-      <Box sx={{ backgroundColor: '#fff', p: 1 }}>
-        <Box textAlign="center" mt={2}>
+      <Box sx={{ backgroundColor: '#fff', p: theme.spacing(1) }}>
+        <Box textAlign="center" mt={theme.spacing(2)}>
           <LogoSection />
           <Stack
-            direction="row"
+            direction={{ xs: 'column', sm: 'row' }}
             justifyContent="center"
             alignItems="flex-start"
-            spacing={matches ? 5 : 2}
-            flexWrap={matches ? 'nowrap' : 'wrap'}
+            spacing={matches ? theme.spacing(5) : theme.spacing(2)}
+            flexWrap={'wrap'}
             color="inherit"
-            mt={1}
-            mb={1}
+            mt={theme.spacing(4)}
+            mb={theme.spacing(2)}
+            mx={{ xs: theme.spacing(2), sm: 0 }}
           >
             <Stack direction="column" spacing={1} justifyContent="flex-start">
               <Link
@@ -59,7 +63,7 @@ const Footer = () => {
                 justifyItems="flex-start"
                 display="flex"
               >
-                Dịch Vụ
+                {<FormattedMessage id="footer.service" />}
               </Link>
               <Link
                 href="use-term"
@@ -72,7 +76,7 @@ const Footer = () => {
                   },
                 }}
               >
-                Điều khoản sử dụng
+                {<FormattedMessage id="footer.termOfUse" />}
               </Link>
               <Link
                 href="info-term"
@@ -85,7 +89,7 @@ const Footer = () => {
                   },
                 }}
               >
-                Chính sách bảo mật thông tin
+                {<FormattedMessage id="footer.security" />}
               </Link>
               <Link
                 href="pay-term"
@@ -98,7 +102,7 @@ const Footer = () => {
                   },
                 }}
               >
-                Chính sách bảo mật thanh toán
+                {<FormattedMessage id="footer.payment" />}
               </Link>
             </Stack>
             <Stack direction="column" spacing={1} justifyContent="flex-start">
@@ -109,7 +113,7 @@ const Footer = () => {
                 justifyItems="flex-start"
                 display="flex"
               >
-                Hỗ Trợ
+                {<FormattedMessage id="footer.support" />}
               </Link>
               <Link
                 href="trans-term"
@@ -122,7 +126,7 @@ const Footer = () => {
                   },
                 }}
               >
-                Chính sách vận chuyển
+                {<FormattedMessage id="footer.shipment" />}
               </Link>
               <Link
                 href="sendback-term"
@@ -135,7 +139,7 @@ const Footer = () => {
                   },
                 }}
               >
-                Chính sách đổi - trả
+                {<FormattedMessage id="footer.exchange" />}
               </Link>
             </Stack>
             <Stack
@@ -143,7 +147,6 @@ const Footer = () => {
               spacing={matches ? 5 : 1}
               justifyContent="flex-start"
               alignItems="flex-start"
-              // flexWrap="wrap"
             >
               <Link
                 href="about-us"
@@ -151,7 +154,7 @@ const Footer = () => {
                 color="inherit"
                 underline="none"
               >
-                Giới Thiệu
+                {<FormattedMessage id="footer.introduce" />}
               </Link>
 
               <Link
@@ -160,17 +163,33 @@ const Footer = () => {
                 color="inherit"
                 underline="none"
               >
-                Liên Hệ
+                {<FormattedMessage id="footer.contact" />}
               </Link>
 
-              <Link
-                href="/profile"
-                variant="h4"
-                color="inherit"
-                underline="none"
+              <Select
+                id="select-language"
+                variant={'standard'}
+                value={currentLocale}
+                renderValue={(value: string) => (
+                  <FormattedMessage id={`language.${value}`} />
+                )}
+                label={<FormattedMessage id="language.title" />}
+                onChange={(event) => {
+                  setCurrentLocale(event.target.value);
+                }}
               >
-                Tài Khoản
-              </Link>
+                {locales?.map((i: string, _index: number) => (
+                  <MenuItem
+                    key={_index}
+                    value={i}
+                    onClick={() => {
+                      push(asPath, asPath, { locale: i });
+                    }}
+                  >
+                    {<FormattedMessage id={`language.${i}`} />}
+                  </MenuItem>
+                ))}
+              </Select>
             </Stack>
           </Stack>
           <Stack direction="row" justifyContent="center" spacing={4} margin={1}>
@@ -188,8 +207,12 @@ const Footer = () => {
             </IconButton>
           </Stack>
         </Box>
-        <Box textAlign="center" pt={{ xs: 1, sm: 2 }} pb={{ xs: 2, sm: 0 }}>
-          <Typography color={theme.palette.info}>
+        <Box
+          textAlign="center"
+          pt={{ xs: theme.spacing(1), sm: theme.spacing(2) }}
+          pb={{ xs: theme.spacing(2), sm: 0 }}
+        >
+          <Typography sx={{ color: theme.palette.info as unknown as any }}>
             &reg; {new Date().getFullYear()} Bản quyền thuộc về Công ty TNHH
             BOXO
           </Typography>
@@ -198,5 +221,4 @@ const Footer = () => {
     </Box>
   );
 };
-
 export default Footer;

@@ -1,6 +1,5 @@
-import Empty404 from '@/components/empty/Empty404';
-import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Empty404 from '@/components/empty/Empty404';
 const NotFoundStyle = styled('div')({
   position: 'fixed',
   top: 0,

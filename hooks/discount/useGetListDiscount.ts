@@ -1,5 +1,5 @@
-import { getAllDiscount } from '../apis/discount.api';
-import { DISCOUNTS } from '../constants/queryKeyName';
+import { getAllDiscount } from '../../apis/discount.api';
+import { DISCOUNTS } from '../../constants/queryKeyName';
 import { useQuery } from 'react-query';
 
 const useGetListDiscount = () => {

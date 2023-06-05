@@ -21,7 +21,7 @@ export const filterBook = async ({
   genres = '',
   publishers = '',
   price = '',
-  order_by = '',
+  sortBy = '',
   page = 1,
 }: any) => {
   let params = '';
@@ -37,13 +37,13 @@ export const filterBook = async ({
     if (params) params = params + '&price=' + price;
     else params = params + 'price=' + price;
   }
-  if (order_by) {
-    if (params) params = params + '&order_by=' + order_by;
-    else params = params + 'order_by=' + order_by;
+  if (sortBy) {
+    if (params) params = params + '&sortBy=' + sortBy;
+    else params = params + 'sortBy=' + sortBy;
   }
-  if (params) params = '?' + params + '&per_page=12&page=' + page;
-  else params = '?per_page=12';
-  return httpRequest.get(`/books${params}&page=` + page);
+  if (params) params = '?' + params + '&limit=12&page=' + page;
+  else params = '?limit=12';
+  return httpRequest.get(`/books${params}`);
 };
 export const getBookDetailById = async (
   id: string | number | null | undefined
@@ -72,11 +72,12 @@ export const createBook = async (data: FormData | any) => {
 };
 
 export const getTopSelling = async () => {
-  return httpRequest.get(`/books?limit=5&page=1&sortBy=createdAt%3Adesc`);
+  return httpRequest.get(`/books?limit=5&page=1&sortBy=createdAt`);
 };
 
 export const getRelateBook = async (genres = '') => {
-  return httpRequest.get(`/books?limit=10&page=1&genre=${genres}`);
+  if (genres) return httpRequest.get(`/books?limit=10&page=1&genres=${genres}`);
+  return httpRequest.get(`/books?limit=10&page=1`);
 };
 
 export const getListBookByGenre = async (genresid: any, slideToShow = 5) => {

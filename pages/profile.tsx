@@ -1,18 +1,25 @@
-import { Paper, Container, Typography } from '@mui/material';
+import { Paper, Container, Typography, useTheme } from '@mui/material';
 import ProductLayout from '../layout/ProductLayot/index';
 import MainCard from '../components/cards/MainCard';
 import AccountTabs from '../components/profile/AccountTabs';
-import useGetUserProfile from '@/hooks/client/useGetUserProfile';
+import useGetUserProfile from '@/hooks/user/useGetUserProfile';
 
 const Profile = () => {
   const { data } = useGetUserProfile();
-
+  const theme = useTheme();
   return (
     <ProductLayout>
-      <Container sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+      <Container
+        sx={{ display: 'flex', flexDirection: 'column', mb: theme.spacing(2) }}
+      >
         <Paper
           className="shadow"
-          sx={{ backgroundColor: '#fff', px: 2, py: 2, mb: { xs: 1, md: 2 } }}
+          sx={{
+            backgroundColor: '#fff',
+            px: theme.spacing(2),
+            py: theme.spacing(2),
+            mb: { xs: theme.spacing(1), md: theme.spacing(2) },
+          }}
         >
           <Typography variant="h3">Cài Đặt Tài Khoản</Typography>
         </Paper>

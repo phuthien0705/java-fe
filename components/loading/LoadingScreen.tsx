@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import ProductLayout from '../../layout/ProductLayot';
 
 const LoadingScreen: React.FunctionComponent = () => {
   return (

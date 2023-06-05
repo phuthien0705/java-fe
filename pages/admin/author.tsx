@@ -14,7 +14,7 @@ import MenuActionAdmin from '../../components/menus/MenuActionAdmin';
 import AuthorModal from '../../components/modals/AuthorModal';
 import { AUTHORS } from '../../constants/queryKeyName';
 import { toggleSnackbar } from '../../store/snackbarReducer';
-import useGetListAuthor from '../../hooks/useGetListAuthor';
+import useGetListAuthor from '../../hooks/author/useGetListAuthor';
 import { deleteAuthor } from '../../apis/author.api';
 import config from '../../config';
 const AuthorManagement = () => {

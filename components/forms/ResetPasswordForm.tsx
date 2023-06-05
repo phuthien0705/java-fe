@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { MouseEventHandler, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
@@ -17,10 +18,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Google from './../../assets/images/icons/social-google.svg';
-import config from '../../config';
-import { forgotPassword, login, resetPassword } from '../../apis/auth.api';
-import { useRouter } from 'next/router';
+import { resetPassword } from '../../apis/auth.api';
 
 const ResetPasswordForm = ({
   params,
@@ -59,18 +57,10 @@ const ResetPasswordForm = ({
           submit: null,
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string()
-            .email('Email phải đúng định dạng')
-            .max(255, 'Email tối đa 255 ký tự')
-            .required('Email là bắt buộc'),
           password: Yup.string()
             .min(8, 'Mật khẩu phải ít nhất 8 ký tự')
             .max(255, 'Mật khẩu tối đa 255 ký tự')
             .required('Mật khẩu là bắt buộc'),
-          password_confirmation: Yup.string()
-            .min(8, 'Nhập lại mật khẩu phải ít nhất 8 ký tự')
-            .max(255, 'Nhập lại mật khẩu tối đa 255 ký tự')
-            .required('Nhập lại mật khẩu là bắt buộc'),
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           if (values.password !== values.password_confirmation) {
@@ -84,11 +74,9 @@ const ResetPasswordForm = ({
           }
           try {
             const req = {
-              email: values.email,
               password: values.password,
-              password_confirmation: values.password_confirmation,
             };
-            const res = await resetPassword(params, req);
+            await resetPassword(params ?? '', req);
             setShowAlert({
               type: 'success',
               content:
@@ -121,33 +109,6 @@ const ResetPasswordForm = ({
           values,
         }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
-            <FormControl
-              fullWidth
-              error={Boolean(touched.email && errors.email)}
-              sx={{ ...theme.typography.customInput }}
-            >
-              <InputLabel htmlFor="outlined-adornment-email-login">
-                Email
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-email-login"
-                type="email"
-                value={values.email}
-                name="email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                label="Email"
-                inputProps={{}}
-              />
-              {touched.email && errors.email && (
-                <FormHelperText
-                  error
-                  id="standard-weight-helper-text-email-login"
-                >
-                  {errors.email}
-                </FormHelperText>
-              )}
-            </FormControl>
             <FormControl
               fullWidth
               error={Boolean(touched.password && errors.password)}
@@ -188,49 +149,7 @@ const ResetPasswordForm = ({
                 </FormHelperText>
               )}
             </FormControl>
-            <FormControl
-              fullWidth
-              error={Boolean(
-                touched.password_confirmation && errors.password_confirmation
-              )}
-              sx={{ ...theme.typography.customInput }}
-            >
-              <InputLabel htmlFor="outlined-adornment-password_confirmation-login">
-                Nhập lại mật khẩu
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password_confirmation-login"
-                type={showPasswordConfirmation ? 'text' : 'password'}
-                value={values.password_confirmation}
-                name="password_confirmation"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPasswordConfirmation}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      size="large"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Nhập lại mật khẩu"
-                inputProps={{}}
-              />
-              {touched.password_confirmation &&
-                errors.password_confirmation && (
-                  <FormHelperText
-                    error
-                    id="standard-weight-helper-text-password-login"
-                  >
-                    {errors.password_confirmation}
-                  </FormHelperText>
-                )}
-            </FormControl>
+
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
                 <FormHelperText error>{errors.submit}</FormHelperText>

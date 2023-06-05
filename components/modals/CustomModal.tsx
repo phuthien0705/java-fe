@@ -1,8 +1,7 @@
+import { FC } from 'react';
 import {
   Box,
-  Button,
   Dialog,
-  DialogTitle,
   Drawer,
   IconButton,
   Stack,
@@ -10,7 +9,6 @@ import {
 } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CloseIcon from '@mui/icons-material/Close';
-import { FC } from 'react';
 import { ICustomModal } from '@/interfaces/compontents/modal.interface';
 
 const CustomModal: FC<ICustomModal> = ({
@@ -18,10 +16,16 @@ const CustomModal: FC<ICustomModal> = ({
   handleClose,
   open,
   title,
+  maxWidth = 'sm',
 }) => {
   const matches = useMediaQuery('(min-width:768px)');
   return matches ? (
-    <Dialog fullWidth maxWidth="sm" onClose={() => handleClose()} open={open}>
+    <Dialog
+      fullWidth
+      maxWidth={maxWidth}
+      onClose={() => handleClose()}
+      open={open}
+    >
       <Stack
         direction="column"
         sx={{ paddingLeft: 2, paddingRight: 2, paddingBottom: 2 }}

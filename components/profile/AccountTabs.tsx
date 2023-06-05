@@ -1,8 +1,8 @@
+import { useState } from 'react';
+import { Box, Tab } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
 import ProfileTab from './ProfileTab';
 import SecurityTab from './SecurityTab';
-import { Box, Tab } from '@mui/material';
-import { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
 
 const AccountTabs: React.FunctionComponent = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);

@@ -62,7 +62,7 @@ const PublisherModal: FC<IModal> = ({ handleClose, open, currentProduct }) => {
             'Mô tả nhà xuất bản tối đa 255 ký tự'
           ),
         })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        onSubmit={async (values, { setStatus, setSubmitting }) => {
           try {
             const req = createRequest({
               name: values.name,

@@ -5,25 +5,17 @@ import {
   Box,
   Button,
   FormControl,
-  FormControlLabel,
   FormHelperText,
-  Grid,
-  IconButton,
-  InputAdornment,
   InputLabel,
   OutlinedInput,
-  useMediaQuery,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { forgotPassword } from '../../apis/auth.api';
-import { useRouter } from 'next/router';
 
 const ForgotPasswordForm = ({ ...others }: { [others: string]: unknown }) => {
   const theme: any = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const [showAlert, setShowAlert] = useState(false);
-  const router = useRouter();
   return (
     <>
       <Formik
@@ -41,7 +33,7 @@ const ForgotPasswordForm = ({ ...others }: { [others: string]: unknown }) => {
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             const req = { email: values.email };
-            const res = await forgotPassword(req);
+            await forgotPassword(req);
             setShowAlert(true);
             setStatus({ success: true });
             setSubmitting(false);

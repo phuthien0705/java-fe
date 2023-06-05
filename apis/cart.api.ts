@@ -1,18 +1,19 @@
+import { ICartResponse } from '@/interfaces/compontents/cart.interface';
 import httpRequest from '@/services/httpRequest';
 
 export const getCartItems = async () => {
-  return httpRequest.get('/cart/get');
+  return httpRequest.get<ICartResponse>('/cart/get');
 };
 
-export const addToCart = async (data: {
-  book_id: number;
+export const postAddToCart = async (data: {
+  bookId: number;
   quantity: number;
 }) => {
   return httpRequest.post('/cart/add-to-cart', data);
 };
 
 export const updateCart = async (data: {
-  book_id: number;
+  bookId: string;
   quantity: number;
 }) => {
   return httpRequest.put('/cart/update', data);
@@ -20,15 +21,15 @@ export const updateCart = async (data: {
 export const clearCart = async () => {
   return httpRequest.put('/cart/clear', null);
 };
-export const removeFormCart = async (data: { book_id: number }) => {
+export const removeFormCart = async (data: { bookId: string }) => {
   return httpRequest.put('/cart/remove', data);
 };
 export const addCheckedItem = async (data: {
-  book_id: number;
-  is_checked: boolean;
+  bookId: string;
+  isChecked: boolean;
 }) => {
-  return httpRequest.put('/cart/add-checked-item', data);
+  return httpRequest.put('/cart/checked-item', data);
 };
-export const addAllCheckedItem = async (data: { is_checked: boolean }) => {
-  return httpRequest.put('/cart/add-all-checked-item', data);
+export const addAllCheckedItem = async (data: { isChecked: boolean }) => {
+  return httpRequest.put('/cart/checked-all-items', data);
 };

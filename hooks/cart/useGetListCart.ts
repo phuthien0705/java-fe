@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { getCartItems } from '@/apis/cart.api';
 
 const useGetListCart = () => {
-  const getListQuery: any = useQuery(CART_CLIENT, getCartItems, {
+  const getListQuery = useQuery(CART_CLIENT, getCartItems, {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });

@@ -1,19 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTheme, styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
+import { styled, useTheme } from '@mui/material/styles';
 import {
-  Avatar,
   Box,
-  ButtonBase,
-  Card,
-  Grid,
   InputAdornment,
   OutlinedInput,
-  Popper,
   useMediaQuery,
 } from '@mui/material';
 import { IconSearch } from '@tabler/icons';
 import { shouldForwardProp } from '@mui/system';
-import { useRouter } from 'next/router';
 
 const OutlineInputStyle = styled(OutlinedInput, { shouldForwardProp })(
   ({ theme }) => ({
@@ -85,7 +80,6 @@ const SearchSection = () => {
           className="shadow"
           sx={{
             width: matches ? 'fit-content' : '100%',
-
             borderRadius: '8px',
             '.css-wmrpzn-MuiOutlinedInput-notchedOutline': {
               border: 'none !important',
@@ -104,7 +98,11 @@ const SearchSection = () => {
             id="input-search-header"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Tìm kiếm sản phẩm tại đây"
+            placeholder={
+              router.locale === 'vi'
+                ? 'Tìm kiếm sản phẩm tại đây'
+                : 'Search product here'
+            }
             startAdornment={
               <InputAdornment position="start">
                 <IconSearch

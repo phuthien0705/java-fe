@@ -3,14 +3,14 @@ import { USER_ADMIN } from '@/constants/queryKeyName';
 import { useQuery } from 'react-query';
 
 const useGetListUser = (
-  current_page: number,
-  per_page = 10,
+  page: number,
+  limit = 10,
   searchFields = [],
   value = ''
 ) => {
   const getListQuery: any = useQuery(
-    [USER_ADMIN, current_page],
-    () => getUserForAdmin(current_page, per_page, searchFields, value),
+    [USER_ADMIN, page],
+    () => getUserForAdmin(page, limit, searchFields, value),
     {
       refetchOnMount: true,
       keepPreviousData: true,

@@ -3,12 +3,24 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
-    REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+    REACT_APP: process.env.REACT_APP,
     GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
     SITE_URL: process.env.SITE_URL,
+    CLIENT_ID: process.env.CLIENT_ID,
+    SOCKET_URL: process.env.SOCKET_URL,
   },
   images: {
-    domains: ['storage.googleapis.com', 'book-image.s3-hcm-r1.longvan.net'],
+    domains: [
+      'storage.googleapis.com',
+      'book-image.s3-hcm-r1.longvan.net',
+      'boxo-images.s3-hcm-r1.longvan.net',
+      'lh3.googleusercontent.com',
+      'books.google.com',
+    ],
+  },
+  i18n: {
+    locales: ['vi', 'en'],
+    defaultLocale: 'vi',
   },
   webpack(config) {
     config.module.rules.push({

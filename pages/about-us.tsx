@@ -1,10 +1,10 @@
-import CarouselCustumized from '@/components/carousel/CarouselCustumized';
-import MainCard from '@/components/cards/MainCard';
-import { Typography, Grid, Stack, Divider, Box } from '@mui/material';
 import Image from 'next/image';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Typography, Grid, Stack, Divider, Box } from '@mui/material';
 import LogosloganMd from '../assets/images/boxo/Logoslogan-md.png';
 import CardMember from '@/components/cards/products/CardMember';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import CarouselCustumized from '@/components/carousel/CarouselCustumized';
+import MainCard from '@/components/cards/MainCard';
 import ProductLayout from '@/layout/ProductLayot';
 
 const aboutUs = () => {

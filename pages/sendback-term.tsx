@@ -1,7 +1,7 @@
+import { Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import MainCard from '@/components/cards/MainCard';
 import ProductLayout from '@/layout/ProductLayot';
-import { Typography, Divider } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const PolicyPage = () => {
   const matches = useMediaQuery('(min-width:600px)');

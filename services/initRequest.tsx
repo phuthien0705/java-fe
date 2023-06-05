@@ -9,8 +9,8 @@ function getAccessToken() {
 }
 
 const requestConfig = {
-  baseURL: process.env.REACT_APP_API_URL
-    ? `${process.env.REACT_APP_API_URL}`
+  baseURL: process.env.REACT_APP
+    ? `${process.env.REACT_APP}`
     : 'https://bookstore-39jw3.ondigitalocean.app/api',
 };
 
@@ -20,10 +20,8 @@ export default function initRequest() {
   axiosInstance.interceptors.request.use(
     (config) => {
       const accessToken = getAccessToken();
-      if (accessToken) {
-        config.headers = {
-          Authorization: `Bearer ${accessToken}`,
-        };
+      if (accessToken && config.headers) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
 
       return config;

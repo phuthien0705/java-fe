@@ -1,16 +1,19 @@
+import { FC } from 'react';
 import {
-  Box,
   Checkbox,
   IconButton,
   Paper,
   Stack,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import QuantityButton from '../extended/Quantity';
-import { FC } from 'react';
-import { IItemTableMobile } from '@/interfaces/compontents/cart.interface';
+import {
+  IEachCartData,
+  IItemTableMobile,
+} from '@/interfaces/compontents/cart.interface';
 import { moneyFormat } from '@/utils/moneyFormat';
 
 const ImageStyle = styled('img')({
@@ -31,6 +34,7 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
   clearCart,
   addressMode = false,
 }) => {
+  const theme = useTheme();
   return (
     <Paper sx={{ margin: '16px 16px 16px 0' }}>
       {' '}
@@ -40,13 +44,15 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
             <Checkbox
               sx={{ height: 'fit-content' }}
               checked={
-                items?.every((item: any) => item?.is_checked == true) || false
+                items?.every(
+                  (item: IEachCartData) => item.isChecked === true
+                ) || false
               }
               onChange={() => {
                 checkAllItem &&
                   checkAllItem({
-                    is_checked: !items?.every(
-                      (item: any) => item?.is_checked == true
+                    isChecked: !items?.every(
+                      (item: IEachCartData) => item?.isChecked == true
                     ),
                   });
               }}
@@ -62,7 +68,7 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
           sx={{
             color: 'red',
             cursor: 'pointer',
-            display: items?.every((item: any) => item?.is_checked == true)
+            display: items?.every((item: any) => item?.isChecked == true)
               ? 'inline-block'
               : 'none',
           }}
@@ -70,78 +76,76 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
           (Xóa)
         </Typography>
       </Typography>
-      {items.map(
-        (item: any, _index: number) =>
-          ((addressMode && item?.is_checked === 1) || !addressMode) && (
-            <Stack
-              key={_index}
-              direction="row"
-              alignItems={'flex-end'}
-              justifyContent="space-between"
-              mt={2}
-              mb={2}
-            >
-              <Stack direction="row" alignItems={'center'}>
-                {!addressMode && (
-                  <Checkbox
-                    sx={{ height: 'fit-content' }}
-                    checked={item?.is_checked || false}
-                    onChange={() => {
-                      checkItem &&
-                        checkItem({
-                          book_id: item?.book?.id,
-                          is_checked: !item?.is_checked,
-                        });
-                    }}
-                  />
-                )}
-                <ImageStyle
-                  alt={item?.book?.name}
-                  src={item?.book?.book_image}
-                />
-
-                <Stack
-                  direction="column"
-                  justifyContent="space-between"
-                  spacing={2}
-                >
-                  <Typography fontSize="16px">{item?.book?.name}</Typography>
-                  <Stack direction="column" spacing={1}>
-                    <Typography
-                      fontSize="14px"
-                      fontWeight="bold"
-                      color="#ee4d2d"
-                    >
-                      {moneyFormat(item.price)}
-                    </Typography>
-                    <QuantityButton
-                      currentQuantity={item?.quantity}
-                      handleIncreaseQuantity={() =>
-                        handleIncreaseQuantity &&
-                        handleIncreaseQuantity(item?.book_id)
-                      }
-                      handleDecreaseQuantity={() =>
-                        handleDecreaseQuantity &&
-                        handleDecreaseQuantity(item?.book_id)
-                      }
+      <Stack spacing={theme.spacing(4)}>
+        {items.map(
+          (item: IEachCartData) =>
+            ((addressMode && item?.isChecked === true) || !addressMode) && (
+              <Stack
+                key={item.bookId}
+                direction="row"
+                alignItems={'flex-end'}
+                justifyContent="space-between"
+              >
+                <Stack direction="row" alignItems={'center'}>
+                  {!addressMode && (
+                    <Checkbox
+                      sx={{ height: 'fit-content' }}
+                      checked={item?.isChecked || false}
+                      onChange={() => {
+                        checkItem &&
+                          checkItem({
+                            bookId: item.bookId,
+                            isChecked: !item?.isChecked,
+                          });
+                      }}
                     />
+                  )}
+                  <Stack direction={'row'} spacing={theme.spacing(2)}>
+                    <ImageStyle alt={item.name} src={item.imageUrl} />
+                    <Stack
+                      direction="column"
+                      justifyContent="space-between"
+                      spacing={2}
+                    >
+                      <Typography fontSize="16px">{item.name}</Typography>
+                      <Stack direction="column" spacing={1}>
+                        <Typography
+                          fontSize="14px"
+                          fontWeight="bold"
+                          color="#ee4d2d"
+                        >
+                          {moneyFormat(item.price)}
+                        </Typography>
+                        <QuantityButton
+                          currentQuantity={item?.quantity}
+                          handleIncreaseQuantity={() =>
+                            handleIncreaseQuantity &&
+                            handleIncreaseQuantity(item.bookId)
+                          }
+                          handleDecreaseQuantity={() =>
+                            handleDecreaseQuantity &&
+                            handleDecreaseQuantity(item.bookId)
+                          }
+                        />
+                      </Stack>
+                    </Stack>
                   </Stack>
                 </Stack>
+                {!addressMode && (
+                  <IconButton
+                    sx={{ padding: '0 0 2px 0' }}
+                    size="small"
+                    disableFocusRipple
+                    disableRipple
+                    onClick={() => handleDelete && handleDelete(item.bookId)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                )}
               </Stack>
-              {!addressMode && (
-                <IconButton
-                  sx={{ padding: '0 0 2px 0' }}
-                  size="small"
-                  disableFocusRipple
-                  disableRipple
-                  onClick={() => handleDelete && handleDelete(item?.book_id)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              )}
-            </Stack>
-          )
-      )}
+            )
+        )}
+      </Stack>
     </Paper>
   );
 };

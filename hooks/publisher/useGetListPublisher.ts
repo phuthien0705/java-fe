@@ -1,5 +1,5 @@
-import { getAllPublisher } from '../apis/publisher.api';
-import { PUBLISHERS } from '../constants/queryKeyName';
+import { getAllPublisher } from '../../apis/publisher.api';
+import { PUBLISHERS } from '../../constants/queryKeyName';
 import { useQuery } from 'react-query';
 
 const useGetListPublisher = (

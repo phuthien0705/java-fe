@@ -1,5 +1,5 @@
-import { getAllBook } from '../apis/product.api';
-import { BOOKS } from '../constants/queryKeyName';
+import { getAllBook } from '../../apis/product.api';
+import { BOOKS } from '../../constants/queryKeyName';
 import { useQuery } from 'react-query';
 
 const useGetListBook = (

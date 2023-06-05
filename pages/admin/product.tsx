@@ -6,7 +6,6 @@ import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import AddIcon from '@mui/icons-material/Add';
-import { styled } from '@mui/material/styles';
 import AdminLayout from '../../layout/AdminLayout';
 import SearchAdminSection from '../../components/Header/SearchSection/SearchAdmin';
 import CustomNoRowsOverlay from '../../components/empty/CustomNoRowsOverlay';
@@ -14,10 +13,10 @@ import MenuActionAdmin from '../../components/menus/MenuActionAdmin';
 import { deleteBook } from '../../apis/product.api';
 import { toggleSnackbar } from '../../store/snackbarReducer';
 import BookModal from '../../components/modals/BookModal';
-import useGetListBook from '../../hooks/useGetListBook';
-import useGetListGenre from '../../hooks/useGetListGenre';
-import useGetListAuthor from '../../hooks/useGetListAuthor';
-import useGetListPublisher from '../../hooks/useGetListPublisher';
+import useGetListBook from '../../hooks/book/useGetListBook';
+import useGetListGenre from '../../hooks/genre/useGetListGenre';
+import useGetListAuthor from '../../hooks/author/useGetListAuthor';
+import useGetListPublisher from '../../hooks/publisher/useGetListPublisher';
 import MainCard from '../../components/cards/MainCard';
 import config from '../../config';
 import {
@@ -25,12 +24,6 @@ import {
   TDataImage,
 } from '@/components/modals/PreviewImageModal';
 
-const ImageStyle = styled('img')({
-  borderRadius: 4,
-  objectFit: 'cover',
-  padding: '5px 0',
-  height: '100px',
-});
 const ProductManagement = () => {
   const dispatch = useDispatch();
   const [searchContent, setSearchContent] = useState<string>('');
@@ -103,12 +96,12 @@ const ProductManagement = () => {
 
   const columns: any[] = [
     {
-      field: '_id',
+      field: 'id',
       headerName: 'ID',
       description: 'ID sản phẩm',
       width: 50,
       renderCell: (params: any) => {
-        return <p className="truncate">{params?.row?._id}</p>;
+        return <p className="truncate">{params?.row?.id}</p>;
       },
     },
     {
@@ -174,7 +167,7 @@ const ProductManagement = () => {
         return (
           <MenuActionAdmin
             id={params?.row?.id}
-            deleteCallback={() => mutate(params?.row?._id)}
+            deleteCallback={() => mutate(params?.row?.id)}
             editCallback={() => toggleModalEdit(params?.row)}
           />
         );
@@ -184,7 +177,7 @@ const ProductManagement = () => {
   useEffect(() => {
     refetch();
   }, [refetch, page, searchContent]);
-  console.log(bookData);
+
   return (
     <AdminLayout>
       {' '}
@@ -230,7 +223,7 @@ const ProductManagement = () => {
           </Stack>
           <Box mt={2} sx={{ height: 610, width: '100%' }}>
             <DataGrid
-              getRowId={(row) => row._id}
+              getRowId={(row) => row.id}
               className="shadow"
               sx={{
                 border: 'none !important',
@@ -267,7 +260,7 @@ const ProductManagement = () => {
               variant="outlined"
               shape="rounded"
               color="primary"
-              count={bookData?.totalPage ?? 0}
+              count={bookData?.totalPages ?? 0}
               page={page}
               onChange={(event, value) => setPage(value)}
             />

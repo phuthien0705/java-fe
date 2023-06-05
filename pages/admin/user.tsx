@@ -16,8 +16,8 @@ import { activeUser, unactiveUser } from '@/apis/user.api';
 import { toggleSnackbar } from '@/store/snackbarReducer';
 import UserModal from '@/components/modals/UserModal';
 import { useToast } from '@/hooks/useToast';
-import useGetListUser from '@/hooks/useGetListUser';
 import config from '../../config';
+import useGetListUser from '@/hooks/user/useGetListUser';
 
 const ImageStyle = styled('img')({
   width: '80%',
@@ -43,7 +43,7 @@ const UserManagement = () => {
   }, []);
 
   const { mutate: activeUserFunc } = useMutation(
-    (data: { user_id: number; role_id: number }) => activeUser(data),
+    (data: { userId: string }) => activeUser(data),
     {
       onError: () => {
         toast({
@@ -57,7 +57,7 @@ const UserManagement = () => {
     }
   );
   const { mutate: unactiveUserFunc } = useMutation(
-    (data: { user_id: number; role_id: number }) => unactiveUser(data),
+    (data: { userId: string }) => unactiveUser(data),
     {
       onError: () => {
         toast({
@@ -78,7 +78,8 @@ const UserManagement = () => {
       description: 'Hình nền',
       width: 100,
       renderCell: (params: any) => {
-        return <ImageStyle src={params.value} alt={params?.row?.name} />;
+        // return <ImageStyle src={params.value} alt={params?.row?.name} />;
+        return <h1>NO IMAGE</h1>;
       },
     },
     { field: 'name', headerName: 'Họ tên', description: 'Họ tên', flex: 1 },
@@ -109,13 +110,13 @@ const UserManagement = () => {
         return (
           <Box>
             <Switch
-              checked={params?.row?.is_active}
-              disabled={params?.row?.roles?.includes('Admin')}
+              checked={params?.row?.isActive}
+              disabled={params?.row?.roles?.includes('admin')}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 if (event.target.checked) {
-                  activeUserFunc({ user_id: params?.row?.id, role_id: 1 });
+                  activeUserFunc({ userId: params?.row?.id });
                 } else {
-                  unactiveUserFunc({ user_id: params?.row?.id, role_id: 1 });
+                  unactiveUserFunc({ userId: params?.row?.id });
                 }
               }}
               inputProps={{ 'aria-label': 'controlled' }}
@@ -176,7 +177,7 @@ const UserManagement = () => {
               disableColumnMenu
               loading={isLoading}
               columns={columns}
-              rows={isLoading ? [] : data?.data}
+              rows={data?.datas ?? []}
               components={{
                 NoRowsOverlay: CustomNoRowsOverlay,
                 LoadingOverlay: LinearProgress,

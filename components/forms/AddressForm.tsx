@@ -1,45 +1,41 @@
 import { useTheme } from '@mui/material/styles';
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
   FormControl,
-  FormControlLabel,
   FormHelperText,
   InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
   Stack,
-  Typography,
-  useMediaQuery,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useDispatch } from 'react-redux';
 import { toggleSnackbar } from '@/store/snackbarReducer';
-import useGetListAddress from '@/hooks/client/useGetListAddress';
-import useGetListCity from '@/hooks/client/useGetListCity';
+import useGetListProvinces from '@/hooks/client/useGetListProvinces';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
-import { getListDistrict } from '@/apis/city.api';
+import { getListProvinces, getListProvinceCities } from '@/apis/city.api';
 import { addAddress, updateAddress } from '@/apis/address.api';
 import { useToast } from '@/hooks/useToast';
-import { LoadingButton } from '@mui/lab';
 
 const AddressForm = ({ currentAddress, setEditMode, refetchAddress }: any) => {
   const theme: any = useTheme();
   const dispatch = useDispatch();
   const data = currentAddress?.data;
-  const { data: listCity } = useGetListCity();
-  const [listDistrict, setListDistrict] = useState<any[]>([]);
+  const { data: listProvince } = useGetListProvinces();
+  const [listCity, setListCity] = useState<any[]>([]);
 
   const toast = useToast(dispatch, toggleSnackbar);
-  const { mutate: getListDistrictFunc } = useMutation(
-    (id: string | number) => getListDistrict(id),
+  const { mutate: getListCitiesFunc } = useMutation(
+    (id: string | number) => getListProvinceCities(id),
     {
       onSuccess: (data: any) => {
-        setListDistrict(data?.city);
+        setListCity(data);
       },
       onError: () => {
         toast({
@@ -49,6 +45,7 @@ const AddressForm = ({ currentAddress, setEditMode, refetchAddress }: any) => {
       },
     }
   );
+
   const { mutate: createAddressFunc, isLoading: isCreating } = useMutation(
     (data: any) => addAddress(data),
     {
@@ -92,19 +89,19 @@ const AddressForm = ({ currentAddress, setEditMode, refetchAddress }: any) => {
     }
   );
   const initialValues = {
-    name: data?.name ? data?.name : '',
-    description: data?.description ? data?.description : '',
-    phone: data?.phone ? data?.phone : '',
-    district_id: data?.city?.id ? data?.city?.id : '',
-    city_id: data?.city?.province_id ? data?.city?.province_id : '',
+    name: data?.name ?? '',
+    description: data?.description ?? '',
+    phone: data?.phone ?? '',
+    cityId: data?.cityId.id ?? '',
+    provinceId: data?.cityId?.province ?? '',
     submit: null,
   };
 
   useEffect(() => {
-    if (data?.city?.province_id) {
-      getListDistrictFunc(data?.city?.province_id);
+    if (data?.cityId?.province) {
+      getListCitiesFunc(data?.cityId?.province);
     }
-  }, [data, getListDistrictFunc]);
+  }, [data, getListCitiesFunc]);
   return (
     <Formik
       initialValues={initialValues}
@@ -113,8 +110,8 @@ const AddressForm = ({ currentAddress, setEditMode, refetchAddress }: any) => {
           .max(255, 'Họ và tên tối đa 255 ký tự')
           .required('Họ và tên là bắt buộc'),
         description: Yup.string().required('Địa chỉ cụ thể là bắt buộc'),
-        city_id: Yup.string().required('Tỉnh/Thành phố là bắt buộc'),
-        district_id: Yup.string().required('Quận/Huyện là bắt buộc'),
+        provinceId: Yup.string().required('Tỉnh/Thành phố là bắt buộc'),
+        cityId: Yup.string().required('Quận/Huyện là bắt buộc'),
         phone: Yup.number()
           .required('Số điện thoại là bắt buộc')
           .integer('Số điện thoại phải là số nguyên')
@@ -130,7 +127,7 @@ const AddressForm = ({ currentAddress, setEditMode, refetchAddress }: any) => {
             name: values.name,
             description: values.description,
             phone: values.phone,
-            city_id: values.district_id,
+            cityId: values.cityId,
           };
 
           if (!data) {
@@ -216,72 +213,70 @@ const AddressForm = ({ currentAddress, setEditMode, refetchAddress }: any) => {
               </FormControl>
             </Grid>
           </Grid>
-          {/* city */}
+          {/* provinces */}
           <FormControl
             fullWidth
-            error={Boolean(touched.city_id && errors.city_id)}
+            error={Boolean(touched.provinceId && errors.provinceId)}
             sx={{ ...theme.typography.customInput }}
           >
             <InputLabel htmlFor="select-city">Tỉnh/Thành phố</InputLabel>
 
             <Select
               id="select-city"
-              value={values.city_id}
-              label="Tác giả"
+              value={values.provinceId}
+              label="Tỉnh/Thành phố"
               onChange={(event) => {
-                getListDistrictFunc(event.target.value);
+                getListCitiesFunc(event.target.value);
                 setValues((prev) => ({
                   ...prev,
-                  city_id: event.target.value,
+                  provinceId: event.target.value,
                 }));
               }}
             >
-              {(listCity?.provinces || [])?.map(
-                (province: any, _index: number) => (
-                  <MenuItem key={_index} value={province?.id}>
-                    {province?.name}
-                  </MenuItem>
-                )
-              )}
+              {(listProvince || [])?.map((province: any, _index: number) => (
+                <MenuItem key={_index} value={province?.id}>
+                  {province?.name}
+                </MenuItem>
+              ))}
             </Select>
-            {touched.city_id && errors.city_id && (
-              <FormHelperText error id="standard-weight-helper-text-city_id">
-                {errors.city_id as any}
+            {touched.provinceId && errors.provinceId && (
+              <FormHelperText error id="standard-weight-helper-text-cityId">
+                {errors.provinceId as any}
               </FormHelperText>
             )}
           </FormControl>
-          {/* distric  */}
+          {/* city  */}
           <FormControl
-            disabled={!values?.city_id}
+            disabled={!values?.provinceId}
             fullWidth
-            error={Boolean(touched.district_id && errors.district_id)}
+            error={Boolean(touched.cityId && errors.cityId)}
             sx={{ ...theme.typography.customInput }}
           >
             <InputLabel htmlFor="select-district">Quận/Huyện</InputLabel>
 
             <Select
               id="select-district"
-              value={values.district_id}
+              value={values.cityId}
               label="Quận/Huyện"
               onChange={(event) => {
                 setValues((prev) => ({
                   ...prev,
-                  district_id: event.target.value,
+                  cityId: event.target.value,
                 }));
               }}
             >
-              {(listDistrict || [])?.map((district: any, _index: number) => (
-                <MenuItem key={_index} value={district?.id}>
-                  {district?.name}
+              {(listCity || [])?.map((city: any, _index: number) => (
+                <MenuItem key={_index} value={city?.id}>
+                  {city?.name}
                 </MenuItem>
               ))}
             </Select>
-            {touched.district_id && errors.district_id && (
+            {touched.cityId && errors.cityId && (
               <FormHelperText
                 error
                 id="standard-weight-helper-text-district_id"
               >
-                {errors.district_id as any}
+                {errors.cityId as any}
               </FormHelperText>
             )}
           </FormControl>

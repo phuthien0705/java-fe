@@ -67,11 +67,11 @@ const BookModal: FC<IBookModal> = ({
       ? dayjs(data?.publishedDate).format('YYYY-MM-DD')
       : '',
     publisherId: data?.publisherId ?? '',
-    genres: data?.genres ?? [],
-    authors: data?.authors ?? [],
+    genres: data?.genres ? data?.genres?.map((item: any) => item?.id) : [],
+    authors: data?.authors ? data?.authors?.map((item: any) => item?.id) : [],
     submit: null,
   };
-  console.log(data, initialValues);
+
   const handleExit = (currentValues: any) => {
     if (objectEquals(initialValues, currentValues)) {
       handleClose();
@@ -93,7 +93,7 @@ const BookModal: FC<IBookModal> = ({
       if (numberOfImage > 15) {
         toast({
           type: 'warning',
-          message: 'Bạn có thể chọn tối đa 5 ảnh',
+          message: 'Bạn có thể chọn tối đa 15 ảnh',
         });
         return;
       }
@@ -155,11 +155,10 @@ const BookModal: FC<IBookModal> = ({
               ...cloneValues,
             });
 
-            console.log(req);
             if (data === null) {
               await createBook(req);
             } else {
-              await editBook(data?._id, req);
+              await editBook(data?.id, req);
             }
             setStatus({ success: true });
             setSubmitting(false);
@@ -572,6 +571,7 @@ const BookModal: FC<IBookModal> = ({
                   value={values.authors}
                   label="Tác giả"
                   onChange={(event) => {
+                    console.log(event.target.value);
                     setValues((prev) => ({
                       ...prev,
                       authors: event.target.value,

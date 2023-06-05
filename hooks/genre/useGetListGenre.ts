@@ -1,5 +1,5 @@
-import { getAllGenre } from '../apis/genre.api';
-import { GENRES } from '../constants/queryKeyName';
+import { getAllGenre } from '../../apis/genre.api';
+import { GENRES } from '../../constants/queryKeyName';
 import { useQuery } from 'react-query';
 
 const useGetListGenre = (

@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import { moneyFormat } from '@/utils/moneyFormat';
 import { ITotalOrder } from '@/interfaces/compontents/statistic.interface';
 
 const TotalOrder: React.FunctionComponent<ITotalOrder> = ({ data }) => {

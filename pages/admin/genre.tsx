@@ -1,21 +1,21 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { useMutation, useQueryClient } from 'react-query';
 import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
-import MainCard from '../../components/cards/MainCard';
-import SearchAdminSection from '../../components/Header/SearchSection/SearchAdmin';
+import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import CustomNoRowsOverlay from '../../components/empty/CustomNoRowsOverlay';
-import AddIcon from '@mui/icons-material/Add';
-import config from '../../config';
 import MenuActionAdmin from '../../components/menus/MenuActionAdmin';
 import { deleteGenre } from '../../apis/genre.api';
 import GenreModal from '../../components/modals/GenreModal';
-import { useDispatch } from 'react-redux';
 import { toggleSnackbar } from '../../store/snackbarReducer';
-import { useMutation, useQueryClient } from 'react-query';
 import { GENRES } from '../../constants/queryKeyName';
-import useGetListGenre from '../../hooks/useGetListGenre';
+import SearchAdminSection from '../../components/Header/SearchSection/SearchAdmin';
+import useGetListGenre from '../../hooks/genre/useGetListGenre';
 import AdminLayout from '../../layout/AdminLayout';
+import MainCard from '../../components/cards/MainCard';
+import config from '../../config';
 
 const GenreManagement = () => {
   const queryClient = useQueryClient();

@@ -8,12 +8,15 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { Typography, Paper, Grid, IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { styled } from '@mui/material/styles';
-import QuantityButton from '../extended/Quantity';
 import Checkbox from '@mui/material/Checkbox';
-import { IItemTable } from '@/interfaces/compontents/cart.interface';
+import { Typography, Paper, IconButton } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import DeleteIcon from '@mui/icons-material/Delete';
+import QuantityButton from '../extended/Quantity';
+import {
+  IEachCartData,
+  IItemTable,
+} from '@/interfaces/compontents/cart.interface';
 import { moneyFormat } from '@/utils/moneyFormat';
 
 const ImageStyle = styled('img')({
@@ -47,14 +50,14 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                         sx={{ height: 'fit-content' }}
                         checked={
                           !!items?.every(
-                            (item: any) => item?.is_checked == true
+                            (item: IEachCartData) => item.isChecked == true
                           )
                         }
                         onChange={() => {
                           checkAllItem &&
                             checkAllItem({
-                              is_checked: !items?.every(
-                                (item: any) => item?.is_checked == true
+                              isChecked: !items?.every(
+                                (item: IEachCartData) => item.isChecked == true
                               ),
                             });
                         }}
@@ -71,7 +74,7 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                       color: 'red',
                       cursor: 'pointer',
                       display: items?.every(
-                        (item: any) => item?.is_checked == true
+                        (item: any) => item?.isChecked == true
                       )
                         ? 'inline-block'
                         : 'none',
@@ -99,9 +102,9 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
         </TableHead>
         <TableBody>
           {items.map(
-            (row: any) =>
-              ((addressMode && row?.is_checked === 1) || !addressMode) && (
-                <TableRow key={row.id}>
+            (row: IEachCartData) =>
+              ((addressMode && row?.isChecked === true) || !addressMode) && (
+                <TableRow key={row.bookId}>
                   <TableCell sx={{ maxWidth: '350px' }}>
                     <Stack
                       direction="row"
@@ -111,22 +114,22 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                       {!addressMode && (
                         <Checkbox
                           sx={{ height: 'fit-content' }}
-                          checked={!!row?.is_checked}
+                          checked={!!row?.isChecked}
                           onChange={() => {
                             checkItem &&
                               checkItem({
-                                book_id: row?.book?.id,
-                                is_checked: !row?.is_checked,
+                                bookId: row.bookId,
+                                isChecked: !row.isChecked,
                               });
                           }}
                         />
                       )}
                       <Box>
                         <ImageStyle
-                          alt={row?.book?.name}
+                          alt={row.name}
                           width="76"
                           height="76"
-                          src={row?.book?.book_image}
+                          src={row.imageUrl}
                         />
                       </Box>
                       <Box>
@@ -140,7 +143,7 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                           justifyContent="space-between"
                         >
                           <Typography fontSize="16px" fontWeight="500">
-                            {row?.book?.name}
+                            {row.name}
                           </Typography>
                           <Typography
                             fontSize="14px"
@@ -160,11 +163,11 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                         currentQuantity={row?.quantity}
                         handleIncreaseQuantity={() =>
                           handleIncreaseQuantity &&
-                          handleIncreaseQuantity(row?.book_id)
+                          handleIncreaseQuantity(row.bookId)
                         }
                         handleDecreaseQuantity={() =>
                           handleDecreaseQuantity &&
-                          handleDecreaseQuantity(row?.book_id)
+                          handleDecreaseQuantity(row.bookId)
                         }
                       />
                     </TableCell>
@@ -183,9 +186,7 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                       <IconButton
                         disableFocusRipple
                         disableRipple
-                        onClick={() =>
-                          handleDelete && handleDelete(row?.book_id)
-                        }
+                        onClick={() => handleDelete && handleDelete(row.bookId)}
                       >
                         <DeleteIcon />
                       </IconButton>

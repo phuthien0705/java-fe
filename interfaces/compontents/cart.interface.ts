@@ -1,13 +1,31 @@
 import { Dispatch, SetStateAction } from 'react';
+import { IEachAddressOfUserData } from '../address.interface';
+
+export interface IEachCartData {
+  bookId: string;
+  imageUrl: string;
+  isChecked: boolean;
+  name: string;
+  price: number;
+  priceDiscount: number;
+  quantity: number;
+  totalPrice: number;
+}
+
+export interface ICartResponse {
+  id: string;
+  items: IEachCartData[];
+  userId: string;
+}
 
 export interface ICartSection {
-  data: any;
+  data: IEachCartData[];
   isLoading: boolean;
   isFetching: boolean;
   refetch: () => void;
 }
 export interface IItemTable {
-  items: any;
+  items: IEachCartData[];
   handleIncreaseQuantity?: Function;
   handleDecreaseQuantity?: Function;
   handleDelete?: Function;
@@ -18,7 +36,7 @@ export interface IItemTable {
 }
 
 export interface IItemTableMobile {
-  items: any;
+  items: IEachCartData[];
   handleIncreaseQuantity?: Function;
   handleDecreaseQuantity?: Function;
   handleDelete?: Function;
@@ -36,14 +54,14 @@ export interface IProductAdded {
 export interface ISubmitCart {
   currentIndex: number;
   setCurrentIndex: Function;
-  items: any;
-  listAddress: any;
+  items: IEachCartData[];
   refetchListCart: () => void;
 }
 export interface IPaymentTab {
   data: any;
-  listAddress: any;
+  listAddress: IEachAddressOfUserData[];
   refetchAddress: () => void;
+  isLoading: boolean;
 }
 
 export interface IOrderTable {

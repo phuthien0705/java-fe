@@ -1,3 +1,7 @@
+import { useCallback } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import Tooltip from '@mui/material/Tooltip';
 import { makeStyles } from '@mui/styles';
 import {
   Box,
@@ -7,22 +11,18 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { useMutation, useQueryClient } from 'react-query';
+import LoadingButton from '@mui/lab/LoadingButton';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import { useCallback, useRef } from 'react';
 import ProductCardSkeleton from '../Skeleton/ProductCardSkelection';
 import { IProductCard } from '@/interfaces/compontents/card.interface';
-import { useDispatch } from 'react-redux';
 import { toggleSnackbar } from '@/store/snackbarReducer';
-import { useMutation, useQueryClient } from 'react-query';
-import { addToCart } from '@/apis/cart.api';
-import LoadingButton from '@mui/lab/LoadingButton';
 import authService from '@/services/authService';
-import { useRouter } from 'next/router';
 import { CART_CLIENT } from '@/constants/queryKeyName';
 import { useToast } from '@/hooks/useToast';
 import { moneyFormat } from '@/utils/moneyFormat';
-import Tooltip from '@mui/material/Tooltip';
-import Image from 'next/image';
+import { postAddToCart } from '@/apis/cart.api';
 
 const useStyles = makeStyles({
   root: {
@@ -46,18 +46,17 @@ const ProductCard: React.FunctionComponent<IProductCard> = ({
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const imgRef = useRef(null);
   const classes = useStyles();
   const dispatch = useDispatch();
   const handleClickItem = useCallback(() => {
     router.push({
       pathname: '/product/[pid]',
-      query: { pid: product?._id },
+      query: { pid: product?.id },
     });
   }, [product, router]);
   const toast = useToast(dispatch, toggleSnackbar);
   const { mutate: addToCartFunc, isLoading: isLoadingAddToCart } = useMutation(
-    () => addToCart({ book_id: product?._id, quantity: 1 }),
+    () => postAddToCart({ bookId: product?.id, quantity: 1 }),
     {
       onSuccess: () => {
         // Invalidate and refetch
@@ -91,31 +90,29 @@ const ProductCard: React.FunctionComponent<IProductCard> = ({
   if (isLoading) return <ProductCardSkeleton />;
   return (
     <Card className={slideMode ? classes.slide : classes.root}>
-      {/* <CardMedia
-        sx={{ objectFit: 'contain', padding: '1rem 0' }}
-        ref={imgRef}
-        component="img"
-        height={slideMode ? '150px' : '200px'}
-        image={product?.book_image}
-        alt={product?.name}
-        onClick={handleClickItem}
-      /> */}
       <Box
         sx={{
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          maxHeight: 200,
         }}
       >
         <Image
-          style={{ objectFit: 'contain', padding: '1rem 0', cursor: 'pointer' }}
+          style={{
+            objectFit: 'contain',
+            padding: '1rem 0',
+            cursor: 'pointer',
+            height: '200px',
+          }}
           src={product?.images[0]?.url || '/img/product-not-found.png'}
           quality={75}
           width={150}
           height={slideMode ? 150 : 200}
           alt={product?.name}
           onClick={handleClickItem}
+          referrerPolicy="no-referrer"
         />
       </Box>
       <CardContent sx={{ padding: 2, height: '100%' }}>

@@ -1,25 +1,32 @@
 import { checkoutProduct } from '@/apis/checkout.api';
-import { ISubmitCart } from '@/interfaces/compontents/cart.interface';
+import {
+  IEachCartData,
+  ISubmitCart,
+} from '@/interfaces/compontents/cart.interface';
 import { Stack, Button, Container, Box, Typography } from '@mui/material';
 import { useMutation } from 'react-query';
-import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { toggleSnackbar } from '@/store/snackbarReducer';
 import { moneyFormat } from '@/utils/moneyFormat';
+import useGetShippingCost from '@/hooks/address/useGetShippingCost';
 
 const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
   currentIndex,
   setCurrentIndex,
   items,
-  listAddress,
   refetchListCart,
 }) => {
-  const defaultAddress = (listAddress || []).find(
-    (item: any) => item?.is_default === 1
-  );
-  const router = useRouter();
   const dispatch = useDispatch();
+
+  const {
+    queryReturn: { data },
+  } = useGetShippingCost();
+
+  const isUnCheckAll = items.every(
+    (item: IEachCartData) => item.isChecked === false
+  );
+
   const toast = useCallback(
     ({ type, message }: { type: string; message: string }) => {
       dispatch(toggleSnackbar({ open: true, message, type }));
@@ -27,6 +34,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
     },
     [dispatch]
   );
+
   const { mutate: checkoutFunc } = useMutation(() => checkoutProduct(), {
     onSuccess: () => {
       toast({ type: 'success', message: 'Mua hàng thành công' });
@@ -69,13 +77,9 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
           justifyContent={'space-between'}
           alignItems={'center'}
         >
-          <Stack direction="column" spacing={1}>
-            {currentIndex === 1 && (
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{ transition: 'all 0.5s linear' }}
-              >
+          <Stack>
+            {!isUnCheckAll && (
+              <Stack direction="row" spacing={2}>
                 <Typography
                   sx={{ fontWeight: 600, fontSize: '16px', color: '#000' }}
                 >
@@ -84,7 +88,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
                 <Typography
                   sx={{ fontWeight: 500, fontSize: '16px', color: '#000' }}
                 >
-                  {moneyFormat(defaultAddress?.value) || 0}
+                  {moneyFormat(data?.value ?? 0)}
                 </Typography>
               </Stack>
             )}
@@ -99,14 +103,16 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
               >
                 {items
                   ? moneyFormat(
-                      items.reduce(
-                        (prev: number, curr: any) =>
-                          curr.is_checked === 1
-                            ? Number(prev) +
-                              Number(curr.price) * Number(curr.quantity)
-                            : Number(prev) + 0,
-                        0
-                      ) + ((currentIndex === 1 && defaultAddress?.value) || 0)
+                      isUnCheckAll
+                        ? 0
+                        : items.reduce(
+                            (prev: number, curr: IEachCartData) =>
+                              curr.isChecked === true
+                                ? Number(prev) +
+                                  Number(curr.price) * Number(curr.quantity)
+                                : Number(prev) + 0,
+                            0
+                          ) + (data?.value ?? 0)
                     )
                   : 0}
               </Typography>
@@ -122,10 +128,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
               Quay lại
             </Button>
             <Button
-              disabled={
-                items?.every((item: any) => item?.is_checked == false) ||
-                (listAddress?.length === 0 && currentIndex === 1)
-              }
+              disabled={items?.every((item: any) => item?.is_checked == false)}
               sx={{ width: 'fit-content' }}
               variant="contained"
               fullWidth

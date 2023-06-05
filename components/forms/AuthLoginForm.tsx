@@ -1,12 +1,17 @@
 import { MouseEventHandler, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useRouter } from 'next/router';
 import {
   Alert,
   Box,
+  Button,
   Checkbox,
+  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
+  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -14,33 +19,75 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { login, reSendVerifyEmail } from '../../apis/auth.api';
+import GoogleIcon from '@mui/icons-material/Google';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useDispatch } from 'react-redux';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { login, postLoginGoogle, reSendVerifyEmail } from '../../apis/auth.api';
 import authService from '../../services/authService';
 import checkIsAdminOrManager from '../../common/checkIsAdminOrManager';
-import { useRouter } from 'next/router';
-import { LoadingButton } from '@mui/lab';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import config from '@/config';
+import { useToast } from '@/hooks/useToast';
+import { toggleSnackbar } from '@/store/snackbarReducer';
 
 const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
   const theme: any = useTheme();
+  const intl = useIntl();
   const router = useRouter();
   const matches = useMediaQuery('(min-width:400px)');
-
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
+  const dispatch = useDispatch();
+  const toast = useToast(dispatch, toggleSnackbar);
   const [checked, setChecked] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showAlert, setShowAlert] = useState<any>(null);
-  const googleHandler = async () => {
-    console.error('Login');
-  };
 
+  const localeContent = {
+    emailOrPasswordIncorrect: intl.formatMessage({
+      id: 'page.login.emailOrPasswordIncorrect',
+    }),
+    email: intl.formatMessage({ id: 'page.login.email' }),
+    password: intl.formatMessage({ id: 'page.login.password' }),
+    unActiveAccount: intl.formatMessage({ id: 'page.login.unActiveAccount' }),
+    rememberLogin: intl.formatMessage({ id: 'page.login.rememberLogin' }),
+    googleError: intl.formatMessage({ id: 'page.login.googleError' }),
+    emailValidation: intl.formatMessage({ id: 'page.login.emailValidation' }),
+    emailMaxChar: intl.formatMessage({ id: 'page.login.emailMaxChar' }),
+    emailRequired: intl.formatMessage({ id: 'page.login.emailRequired' }),
+    passwordMinChar: intl.formatMessage({ id: 'page.login.passwordMinChar' }),
+    passwordMaxChar: intl.formatMessage({ id: 'page.login.passwordMaxChar' }),
+    passwordRequired: intl.formatMessage({ id: 'page.login.passwordRequired' }),
+  };
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const result: any = await postLoginGoogle({
+        accessToken: tokenResponse.access_token,
+      });
+      authService.login({
+        accessToken: result.tokens.access.token,
+        name: result.user.name,
+        id: result.user.id,
+        roles: result.user.roles,
+        email: result.user.email,
+      });
+      if (!checkIsAdminOrManager(result?.user?.roles)) {
+        router.push('/');
+      } else {
+        router.push('/admin/statistic');
+      }
+    },
+    onError: () => {
+      toast({ type: 'error', message: localeContent.googleError });
+    },
+  });
 
   const handleMouseDownPassword: MouseEventHandler<HTMLButtonElement> = (
     event
@@ -50,30 +97,23 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
 
   return (
     <>
-      {/* <Grid container direction="column" justifyContent="center" spacing={2}>
+      <Grid container direction="column" justifyContent="center" spacing={2}>
         <Grid item xs={12}>
           <Button
+            onClick={() => loginGoogle()}
             disableElevation
             fullWidth
-            onClick={googleHandler}
             size="large"
             variant="outlined"
             sx={{
               color: 'grey.700',
               backgroundColor: theme.palette.grey[50],
               borderColor: theme.palette.grey[100],
+              display: 'flex',
             }}
           >
-            <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, height: '20px' }}>
-              <Image
-                src={Google}
-                alt="google"
-                width={16}
-                height={16}
-                style={{ marginRight: matchDownSM ? 8 : 16 }}
-              />
-            </Box>
-            Đăng nhập với google
+            <GoogleIcon sx={{ marginRight: '8px' }} />
+            {<FormattedMessage id="page.login.googleContent" />}
           </Button>
         </Grid>
         <Grid item xs={12}>
@@ -101,7 +141,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
               disableRipple
               disabled
             >
-              Hoặc
+              {<FormattedMessage id="page.login.content2" />}
             </Button>
 
             <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
@@ -115,10 +155,12 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
           justifyContent="center"
         >
           <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1">Đăng nhập bằng Email</Typography>
+            <Typography variant="subtitle1">
+              {<FormattedMessage id="page.login.content3" />}
+            </Typography>
           </Box>
         </Grid>
-      </Grid> */}
+      </Grid>
 
       <Formik
         initialValues={{
@@ -128,19 +170,18 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
-            .email('Email phải đúng định dạng')
-            .max(255, 'Email tối đa 255 ký tự')
-            .required('Email là bắt buộc'),
+            .email(localeContent.emailValidation)
+            .max(255, localeContent.emailMaxChar)
+            .required(localeContent.emailRequired),
           password: Yup.string()
-            .min(8, 'Mật khẩu phải ít nhất 8 ký tự')
-            .max(255, 'Mật khẩu tối đa 255 ký tự')
-            .required('Mật khẩu là bắt buộc'),
+            .min(8, localeContent.passwordMinChar)
+            .max(255, localeContent.passwordMaxChar)
+            .required(localeContent.passwordRequired),
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             const req = { email: values.email, password: values.password };
             const res: any = await login(req);
-            console.log(res);
             authService.login({
               accessToken: res.tokens.access.token,
               name: res.user.name,
@@ -152,8 +193,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
               await reSendVerifyEmail();
               setShowAlert({
                 type: 'success',
-                content:
-                  'Tài khoản của bạn chưa được kích hoạt. Một Email đã được gửi, hãy kiểm tra Email để kích hoạt tài khoản.',
+                content: localeContent.unActiveAccount,
               });
               // authService.logOut();
               setStatus({ success: true });
@@ -162,7 +202,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
             }
             setStatus({ success: true });
             setSubmitting(false);
-            if (!checkIsAdminOrManager(res?.roles)) {
+            if (!checkIsAdminOrManager(res?.user?.roles)) {
               router.push('/');
             } else {
               router.push('/admin/statistic');
@@ -171,7 +211,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
             console.error(err);
             setShowAlert({
               type: 'error',
-              content: 'Tài khoản hoặc mặt khẩu không đúng',
+              content: localeContent.emailOrPasswordIncorrect,
             });
             setStatus({ success: false });
 
@@ -195,7 +235,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
               sx={{ ...theme.typography.customInput }}
             >
               <InputLabel htmlFor="outlined-adornment-email-login">
-                Email
+                {localeContent.email}
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-email-login"
@@ -204,7 +244,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
                 name="email"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label="Email"
+                label={localeContent.email}
                 inputProps={{}}
               />
               {touched.email && errors.email && (
@@ -223,7 +263,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
               sx={{ ...theme.typography.customInput }}
             >
               <InputLabel htmlFor="outlined-adornment-password-login">
-                Mật khẩu
+                {localeContent.password}
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password-login"
@@ -245,7 +285,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
                     </IconButton>
                   </InputAdornment>
                 }
-                label="Mật khẩu"
+                label={localeContent.password}
                 inputProps={{}}
               />
               {touched.password && errors.password && (
@@ -272,7 +312,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
                     color="primary"
                   />
                 }
-                label="Ghi nhớ đăng nhập"
+                label={localeContent.rememberLogin}
               />
               <Typography
                 onClick={() => router.push('/forgot-password')}
@@ -286,11 +326,11 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
                   textAlign: 'right',
                 }}
               >
-                Quên mật khẩu
+                {<FormattedMessage id="page.login.forgotPassword" />}
               </Typography>
             </Stack>
             {errors.submit && (
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: theme.spacing(3) }}>
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
@@ -305,7 +345,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
                 variant="contained"
                 color="secondary"
               >
-                Đăng nhập
+                <FormattedMessage id={'page.login.title'} />
               </LoadingButton>
 
               {!!showAlert && (

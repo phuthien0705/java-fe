@@ -15,6 +15,14 @@ export const verifyEmail = async (param: any) => {
 export const reSendVerifyEmail = async () => {
   return httpRequest.post('/auth/send-verification-email', null);
 };
-export const resetPassword = async (params: any, data: any) => {
+export const resetPassword = async (
+  params: string,
+  data: {
+    password: string;
+  }
+) => {
   return httpRequest.post(`/auth/reset-password${params}`, data);
+};
+export const postLoginGoogle = (data: { accessToken: string }) => {
+  return httpRequest.post('/auth/google', data);
 };

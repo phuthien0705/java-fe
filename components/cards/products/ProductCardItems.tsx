@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import ProductCardItem from './ProductCardItem';
 import { makeStyles } from '@mui/styles';
 import config from '../../../config';

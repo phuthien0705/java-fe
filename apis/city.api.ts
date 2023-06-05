@@ -1,8 +1,8 @@
 import httpRequest from '@/services/httpRequest';
 
-export const getListCity = async () => {
-  return httpRequest.get('/cities/province');
+export const getListProvinces = async () => {
+  return httpRequest.get('/provinces');
 };
-export const getListDistrict = async (province: number | string) => {
-  return httpRequest.get(`/cities/province/${province}`);
+export const getListProvinceCities = async (province: number | string) => {
+  return httpRequest.get(`/provinces/${province}/cities`);
 };

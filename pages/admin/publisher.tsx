@@ -13,7 +13,7 @@ import MenuActionAdmin from '../../components/menus/MenuActionAdmin';
 import PublisherModal from '../../components/modals/PublisherModal';
 import { deletePublisher } from '../../apis/publisher.api';
 import { PUBLISHERS } from '../../constants/queryKeyName';
-import useGetListPublisher from '../../hooks/useGetListPublisher';
+import useGetListPublisher from '../../hooks/publisher/useGetListPublisher';
 import { toggleSnackbar } from '../../store/snackbarReducer';
 import config from '../../config';
 

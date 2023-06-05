@@ -3,8 +3,8 @@ import ProductCardItem from './ProductCardItem';
 import ProductCardSkeleton from '../Skeleton/ProductCardSkelection';
 import CustomNoRowsOverlay from '../../empty/CustomNoRowsOverlay';
 import { IProductCardItemsByGenre } from '@/interfaces/compontents/card.interface';
-import useGetBookByGenre from '@/hooks/client/useGetBookByGenre';
 import config from '../../../config';
+import useGetBookByGenre from '@/hooks/book/useGetBookByGenre';
 
 const ProductCardItemsByGenre: React.FunctionComponent<
   IProductCardItemsByGenre
@@ -14,7 +14,6 @@ const ProductCardItemsByGenre: React.FunctionComponent<
     slideToShow,
     !!genreId
   );
-
   const renderProducts = () => {
     if (isLoading)
       return (
@@ -27,8 +26,8 @@ const ProductCardItemsByGenre: React.FunctionComponent<
         </>
       );
 
-    return dataFiltered && dataFiltered?.data?.length > 0 ? (
-      dataFiltered?.data.map((product: any, index: number) => {
+    return dataFiltered && dataFiltered?.datas?.length > 0 ? (
+      dataFiltered?.datas.map((product: any, index: number) => {
         return <ProductCardItem key={index} product={product} index={index} />;
       })
     ) : (

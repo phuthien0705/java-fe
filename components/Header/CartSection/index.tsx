@@ -1,26 +1,21 @@
-import { Avatar, Box, ButtonBase } from '@mui/material';
+import { Avatar, Box, ButtonBase, useTheme } from '@mui/material';
 import { IconShoppingCart } from '@tabler/icons';
-import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import Badge from '@mui/material/Badge';
 import { ICartSection } from '@/interfaces/compontents/cart.interface';
 import authService from '@/services/authService';
+import { EPathName } from '@/constants/pathname';
 
-const CartSection: React.FunctionComponent<ICartSection> = ({
-  data,
-  isLoading,
-  isFetching,
-  refetch,
-}) => {
-  const theme: any = useTheme();
+const CartSection: React.FunctionComponent<ICartSection> = ({ data }) => {
+  const theme = useTheme();
   const router = useRouter();
 
   const handleClickCart = useCallback(() => {
     if (!authService.isAuthenticated()) {
-      router.push('/login');
-    } else if (!router.pathname.includes('/cart')) {
-      router.push('/cart');
+      router.push(EPathName.LOGIN);
+    } else if (!router.pathname.includes(EPathName.CART)) {
+      router.push(EPathName.CART);
     }
   }, [router]);
 
@@ -28,8 +23,8 @@ const CartSection: React.FunctionComponent<ICartSection> = ({
     <Box
       onClick={() => handleClickCart()}
       sx={{
-        ml: 1.5,
-        mr: 1.5,
+        ml: theme.spacing(1.5),
+        mr: theme.spacing(1),
       }}
     >
       <ButtonBase sx={{ borderRadius: '12px' }} className="shadow">
@@ -38,10 +33,10 @@ const CartSection: React.FunctionComponent<ICartSection> = ({
             variant="rounded"
             sx={{
               cursor: 'pointer',
-              borderRadius: '8px',
-              width: '34px',
-              height: '34px',
-              fontSize: '1.2rem',
+              borderRadius: theme.spacing(1),
+              width: theme.spacing(4.25),
+              height: theme.spacing(4.25),
+              fontSize: theme.spacing(2.4),
               transition: 'all .2s ease-in-out',
               background: theme.palette.primary.light,
               color: theme.palette.primary.dark,

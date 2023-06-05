@@ -1,9 +1,9 @@
 import { LIST_CITY } from '../../constants/queryKeyName';
 import { useQuery } from 'react-query';
-import { getListCity } from '@/apis/city.api';
+import { getListProvinces } from '@/apis/city.api';
 
-const useGetListCity = () => {
-  const getListQuery: any = useQuery(LIST_CITY, getListCity, {
+const useGetListProvinces = () => {
+  const getListQuery: any = useQuery(LIST_CITY, getListProvinces, {
     cacheTime: Infinity,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
@@ -12,4 +12,4 @@ const useGetListCity = () => {
   return getListQuery;
 };
 
-export default useGetListCity;
+export default useGetListProvinces;

@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material/styles';
 import { Box, Drawer, useMediaQuery } from '@mui/material';
-
 import MenuList from './MenuList';
 import LogoSection from '../LogoSection';
 import { drawerWidth } from '../../store/constant';
@@ -35,7 +34,7 @@ const Sidebar: React.FunctionComponent<ISideBar> = ({
             color: theme.palette.text.primary,
             borderRight: 'none',
             [theme.breakpoints.up('md')]: {
-              top: '88px',
+              top: theme.spacing(11),
             },
           },
         }}
@@ -43,21 +42,21 @@ const Sidebar: React.FunctionComponent<ISideBar> = ({
       >
         <>
           <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-            <Box sx={{ display: 'flex', p: 2, mx: 'auto' }}>
+            <Box sx={{ display: 'flex', p: theme.spacing(2), mx: 'auto' }}>
               <LogoSection />
             </Box>
           </Box>
           {matchUpMd ? (
             <Box
               sx={{
-                paddingLeft: '16px',
-                paddingRight: '16px',
+                paddingLeft: theme.spacing(2),
+                paddingRight: theme.spacing(2),
               }}
             >
               <MenuList />
             </Box>
           ) : (
-            <Box sx={{ px: 2 }}>
+            <Box sx={{ px: theme.spacing(2) }}>
               <MenuList />
             </Box>
           )}

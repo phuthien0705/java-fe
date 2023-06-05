@@ -1,38 +1,43 @@
-import MainCard from '../cards/MainCard';
+/* eslint-disable @next/next/no-img-element */
+import { useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
+import { useDispatch } from 'react-redux';
 import {
   Grid,
   Stack,
-  Avatar,
   Typography,
   Button,
   TextField,
   Box,
+  styled,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import authService from '../../services/authService';
-import { IProfileTab } from '@/interfaces/compontents/profile.interface';
 import LinearProgress from '@mui/material/LinearProgress';
-import useGetUserProfile from '@/hooks/client/useGetUserProfile';
 import { LoadingButton } from '@mui/lab';
-import { useMutation } from 'react-query';
 import { updateProfile } from '@/apis/user.api';
-import { useDispatch } from 'react-redux';
 import { useToast } from '@/hooks/useToast';
+import MainCard from '../cards/MainCard';
 import { toggleSnackbar } from '@/store/snackbarReducer';
 import createFormDataRequest from '@/common/createFormDataRequest';
+import authService from '@/services/authService';
+import useGetUserProfile from '@/hooks/user/useGetUserProfile';
+
+const AvatarImg = styled('img')({
+  width: 150,
+  height: 150,
+  borderRadius: '50%',
+});
 
 const ProfileTab: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const toast = useToast(dispatch, toggleSnackbar);
   const [previewAvatar, setPreviewAvatar] = useState('');
-  const { data, isLoading, isFetching } = useGetUserProfile();
+  const { data, isLoading } = useGetUserProfile();
   const defaultAvatar =
     '../../static/media/user-round.27fe79b102ea6aad2f60e66cff82818d.svg';
   const [values, setValues] = useState<any>({
     avatar: null,
-    phone: '',
-    bio: '',
+    biography: '',
     address: '',
   });
 
@@ -55,22 +60,20 @@ const ProfileTab: React.FunctionComponent = () => {
   );
 
   const handleSave = () => {
-    if (!values?.phone?.match(/\d/g) && values?.phone?.length !== 10) {
-      toast({ type: 'info', message: 'Số điện thoại phải đúng định dạng' });
-      return;
-    }
+    // if (!values?.phone?.match(/\d/g) && values?.phone?.length !== 10) {
+    //   toast({ type: 'info', message: 'Số điện thoại phải đúng định dạng' });
+    //   return;
+    // }
     const req = createFormDataRequest(
       values?.avatar
         ? {
             address: values?.address,
-            phone: values?.phone,
-            bio: values?.bio,
+            biography: values?.biography,
             avatar: values?.avatar,
           }
         : {
             address: values?.address,
-            phone: values?.phone,
-            bio: values?.bio,
+            biography: values?.biography,
           }
     );
     updateUserProfileFunc(req);
@@ -108,15 +111,14 @@ const ProfileTab: React.FunctionComponent = () => {
   }, [values?.avatar]);
 
   useEffect(() => {
-    setPreviewAvatar(data?.userInfo?.avatar);
+    setPreviewAvatar(data?.avatar);
     setValues((prevValue: any) => ({
       ...prevValue,
-      bio: data?.userInfo?.bio || '',
-      address: data?.userInfo?.address || '',
-      phone: data?.userInfo?.phone || '',
+      biography: data?.biography ?? '',
+      address: data?.address ?? '',
     }));
   }, [data]);
-
+  console.log(previewAvatar);
   if (isLoading) {
     return (
       <Box sx={{ width: '100%' }}>
@@ -135,10 +137,10 @@ const ProfileTab: React.FunctionComponent = () => {
             spacing={2}
             sx={{ height: '100%' }}
           >
-            <Avatar
-              alt="avatar"
+            <AvatarImg
               src={previewAvatar || defaultAvatar || ''}
-              sx={{ width: 150, height: 150 }}
+              alt="avatar"
+              referrerPolicy="no-referrer"
             />
             <Typography>Tải lên/Thay đổi ảnh đại diện.</Typography>
             <Button
@@ -160,25 +162,24 @@ const ProfileTab: React.FunctionComponent = () => {
       <Grid item xs={12} md={8}>
         <MainCard title="Chỉnh sửa thông tin chi tiết">
           <Stack spacing={3}>
-            <TextField disabled label="Email" value={data?.email} />
             <TextField
+              disabled
+              label="Email"
+              value={(authService.getUser() as any)?.email}
+            />
+            {/* <TextField
               name="address"
               label="Địa chỉ"
               value={values?.address}
               onChange={handleChange}
-            />
+            /> */}
             <TextField
               name="bio"
               label="Mô tả bản thân"
-              value={values?.bio}
+              value={values?.biography}
               onChange={handleChange}
             />
-            <TextField
-              name="phone"
-              label="Số điện thoại"
-              value={values?.phone}
-              onChange={handleChange}
-            />
+
             <LoadingButton
               onClick={() => handleSave()}
               loading={isUpdating}

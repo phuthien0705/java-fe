@@ -1,17 +1,21 @@
+import { ReactNode } from 'react';
+
 export interface IProductCard {
   product: any;
   slideMode?: boolean;
   isLoading?: boolean;
   index: number;
 }
+
 export interface IProductCardItem {
   product: any;
   index: number;
 }
+
 export interface IProductCardItems {
   data: any;
-  title?: string;
-  titleIcon?: any;
+  title?: ReactNode | string;
+  titleIcon?: ReactNode;
   titleBackground?: string;
   isLoading?: boolean;
   slideToShow?: number;
@@ -19,15 +23,17 @@ export interface IProductCardItems {
 }
 
 export interface IProductCardItemsByGenre {
-  title?: string;
-  titleIcon?: any;
+  title?: string | ReactNode;
+  titleIcon?: ReactNode;
   titleBackground?: string;
   slideToShow?: number;
   genreId?: number | null;
 }
+
 export interface IProductCardSkeleton {
   slideMode?: boolean;
 }
+
 export interface IMainCard {
   border?: boolean;
   boxShadow?: boolean;
@@ -40,11 +46,13 @@ export interface IMainCard {
   shadow?: string;
   sx?: any;
   title?: any;
-  [others: string]: unknown;
   elevation?: number;
+
+  [others: string]: unknown;
 }
+
 export interface ISubCard {
-  children: React.ReactNode;
+  children: ReactNode;
   content: boolean;
   contentClass?: string;
   darkTitle?: boolean;
@@ -52,5 +60,6 @@ export interface ISubCard {
   sx?: any;
   contentSX?: any;
   title: any;
+
   [others: string]: unknown;
 }

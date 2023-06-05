@@ -1,3 +1,7 @@
+import { FC, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { useMutation, useQueryClient } from 'react-query';
 import {
   Grid,
   Stack,
@@ -6,22 +10,21 @@ import {
   Rating,
   Box,
   Skeleton,
+  useTheme,
 } from '@mui/material';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import { FC, useCallback } from 'react';
-import { addToCart } from '@/apis/cart.api';
-import { useMutation, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
-import { toggleSnackbar } from '@/store/snackbarReducer';
 import { LoadingButton } from '@mui/lab';
-import Image from 'next/image';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { toggleSnackbar } from '@/store/snackbarReducer';
 import { IProductInfo } from '@/interfaces/compontents/product.interface';
 import { CART_CLIENT } from '@/constants/queryKeyName';
-import { useRouter } from 'next/router';
 import { moneyFormat } from '@/utils/moneyFormat';
 import authService from '@/services/authService';
+import { postAddToCart } from '@/apis/cart.api';
 
 const ProductInfo: FC<IProductInfo> = ({ data, isLoading }) => {
+  const theme = useTheme();
   const queryClient = useQueryClient();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -32,21 +35,27 @@ const ProductInfo: FC<IProductInfo> = ({ data, isLoading }) => {
     },
     [dispatch]
   );
+  const intl = useIntl();
+  const translateContent = {
+    requiredLogin: intl.formatMessage({ id: 'requiredLogin' }),
+    addToCartFailed: intl.formatMessage({ id: 'addToCartFailed' }),
+    addToCartSuccess: intl.formatMessage({ id: 'addToCartSuccess' }),
+  };
   const { mutate: addToCartFunc, isLoading: isLoadingAddToCart } = useMutation(
-    () => addToCart({ book_id: data?.id, quantity: 1 }),
+    () => postAddToCart({ bookId: data?.id, quantity: 1 }),
     {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(CART_CLIENT);
         toast({
           type: 'success',
-          message: 'Thêm sản phẩm thành công',
+          message: translateContent.addToCartSuccess,
         });
       },
       onError: () => {
         toast({
           type: 'error',
-          message: 'Xảy ra lỗi trong quá trình thêm sản phẩm',
+          message: translateContent.addToCartFailed,
         });
       },
     }
@@ -54,10 +63,17 @@ const ProductInfo: FC<IProductInfo> = ({ data, isLoading }) => {
   return (
     <Stack
       direction={{ xs: 'column', md: 'row' }}
-      spacing={{ xs: 1, md: 2 }}
+      spacing={{ xs: theme.spacing(1), md: theme.spacing(2) }}
       sx={{ pt: '0 !important', pr: '0 !important', pl: '0 !important' }}
     >
-      <Box className="shadow" sx={{ borderRadius: '8px', py: 2, px: 2 }}>
+      <Box
+        className="shadow"
+        sx={{
+          borderRadius: theme.spacing(1),
+          py: theme.spacing(2),
+          px: theme.spacing(2),
+        }}
+      >
         <Box
           sx={{
             width: { xs: '100%', md: '300px' },
@@ -76,53 +92,71 @@ const ProductInfo: FC<IProductInfo> = ({ data, isLoading }) => {
               quality={75}
               width={300}
               height={400}
-              src={data?.book_image || ''}
+              src={data?.images[0]?.url || ''}
               alt={data?.name}
               style={{ borderRadius: '10px', objectFit: 'cover' }}
+              referrerPolicy="no-referrer"
             />
           )}
         </Box>
       </Box>
       <Box className="shadow" sx={{ width: '100%', borderRadius: '8px' }}>
-        <Grid container sx={{ ml: { md: 4, xs: 4 }, pb: 2 }}>
+        <Grid
+          container
+          spacing={0}
+          sx={{
+            ml: { md: theme.spacing(4), xs: theme.spacing(4) },
+            pb: theme.spacing(2),
+            height: '100%',
+            gap: 0,
+          }}
+        >
           <Grid
             item
-            xs={12}
-            sx={{ px: { xs: 0, md: 1.5 }, py: { xs: 1, md: 1.5 }, mt: 2 }}
+            xs={11}
+            sx={{
+              px: { xs: 0, md: theme.spacing(1.5) },
+              py: { xs: theme.spacing(1), md: theme.spacing(1.5) },
+              mt: theme.spacing(2),
+              alignSelf: 'flex-start',
+            }}
           >
-            <Typography variant="h3" fontSize="24px" fontWeight="500">
-              {data?.name}
-            </Typography>
-          </Grid>
-
-          <Grid
-            item
-            xs={12}
-            sx={{ px: { xs: 0, md: 1.5 }, py: { xs: 1, md: 1.5 } }}
-          >
-            <Stack direction="row" spacing={1}>
-              <Rating value={4.5} precision={0.5} readOnly />
+            <Stack spacing={2}>
+              <Typography variant="h3" fontSize="24px" fontWeight="500">
+                {data?.name}
+              </Typography>
+              <Stack direction="row" spacing={theme.spacing(1)}>
+                <Rating value={4.5} precision={0.5} readOnly />
+              </Stack>
+              <Typography
+                sx={{ fontSize: '32px', color: '#000', fontWeight: 500 }}
+              >
+                {moneyFormat(data?.price || 0)}
+              </Typography>
+              <Box className="line-clamp-4">{data?.description}</Box>
             </Stack>
           </Grid>
+
+          {/* Button */}
           <Grid
             item
             xs={12}
-            sx={{ px: { xs: 0, md: 1.5 }, py: { xs: 1, md: 1.5 } }}
-          >
-            <Typography
-              sx={{ fontSize: '32px', color: '#000', fontWeight: 500 }}
-            >
-              {moneyFormat(data?.price || 0)}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sx={{ px: { xs: 0, md: 1.5 }, py: { xs: 1, md: 1.5 } }}
+            sx={{
+              px: { xs: 0, md: theme.spacing(1.5) },
+              py: {
+                xs: theme.spacing(1),
+                md: theme.spacing(1.5),
+                alignSelf: 'flex-end',
+              },
+            }}
           >
             <Stack
               direction={{ xs: 'column', sm: 'row' }}
-              sx={{ display: 'flex', columnGap: 2, rowGap: 2 }}
+              sx={{
+                display: 'flex',
+                columnGap: theme.spacing(2),
+                rowGap: theme.spacing(2),
+              }}
             >
               <LoadingButton
                 onClick={() => {
@@ -131,7 +165,7 @@ const ProductInfo: FC<IProductInfo> = ({ data, isLoading }) => {
                   } else {
                     toast({
                       type: 'info',
-                      message: 'Đăng nhập để thêm sản phẩm vào vỏ hàng',
+                      message: translateContent.requiredLogin,
                     });
                     router.push({ pathname: '/login' });
                   }
@@ -148,7 +182,7 @@ const ProductInfo: FC<IProductInfo> = ({ data, isLoading }) => {
                 }}
               >
                 <ShoppingCartOutlinedIcon />
-                Thêm vào giỏ hàng
+                {<FormattedMessage id="product.addToCart" />}
               </LoadingButton>
               <Button
                 variant="contained"
@@ -159,13 +193,13 @@ const ProductInfo: FC<IProductInfo> = ({ data, isLoading }) => {
                   } else {
                     toast({
                       type: 'info',
-                      message: 'Đăng nhập để thêm sản phẩm vào vỏ hàng',
+                      message: translateContent.requiredLogin,
                     });
                     router.push({ pathname: '/login' });
                   }
                 }}
               >
-                Mua ngay
+                {<FormattedMessage id="product.buy" />}{' '}
               </Button>
             </Stack>
           </Grid>
