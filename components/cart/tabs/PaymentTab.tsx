@@ -1,13 +1,30 @@
-import { useEffect, useState } from 'react';
-import { Grid, Typography, Box, Stack, Button } from '@mui/material';
+import { SyntheticEvent, useContext, useEffect, useState } from 'react';
+import {
+  Grid,
+  Typography,
+  Box,
+  Stack,
+  Button,
+  FormControlLabel,
+  FormControl,
+  RadioGroup,
+  FormLabel,
+  Radio,
+} from '@mui/material';
+import { IconBrandPaypal } from '@tabler/icons';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ItemTable from '../ItemTable';
 import ItemTableMobile from '../ItemTableMobile';
 import BusinessIcon from '@mui/icons-material/Business';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { IPaymentTab } from '@/interfaces/compontents/cart.interface';
 import AddressModal from '@/components/modals/AddressModal';
 import LinearProgress from '@mui/material/LinearProgress';
 import { IEachAddressOfUserData } from '@/interfaces/address.interface';
+import { CartItemContext } from '../CartItems';
 
 const PaymentTab: React.FunctionComponent<IPaymentTab> = ({
   data,
@@ -15,9 +32,12 @@ const PaymentTab: React.FunctionComponent<IPaymentTab> = ({
   refetchAddress,
   isLoading,
 }) => {
+  const { payMethod, setMethod } = useContext(CartItemContext);
   const matches = useMediaQuery('(min-width:900px)');
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
-
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMethod((event.target as HTMLInputElement).value);
+  };
   const renderDefaultAddress = () => {
     const defaultAddress = (listAddress || []).find(
       (item: IEachAddressOfUserData) => item?.isDefault === true
@@ -85,13 +105,13 @@ const PaymentTab: React.FunctionComponent<IPaymentTab> = ({
     <>
       <Stack spacing={2} sx={{ padding: 2, width: '100%' }}>
         <Stack direction="row" spacing={1} alignItems={'flex-end'}>
-          <BusinessIcon />
           <Typography
             sx={{ fontSize: '14px', lineHeight: '18px', color: '#000' }}
           >
-            Địa chỉ nhận hàng
+            <BusinessIcon /> Địa chỉ nhận hàng
           </Typography>
         </Stack>
+
         {!isLoading ? (
           renderDefaultAddress()
         ) : (
@@ -99,6 +119,67 @@ const PaymentTab: React.FunctionComponent<IPaymentTab> = ({
             <LinearProgress />
           </Box>
         )}
+        <Stack direction="row" spacing={1} alignItems={'flex-end'}>
+          <FormControl>
+            <Typography
+              sx={{ fontSize: '14px', lineHeight: '18px', color: '#000' }}
+            >
+              <AccountBalanceWalletIcon /> Hình thức thanh toán
+            </Typography>
+            <RadioGroup onChange={handleChange} value={payMethod}>
+              <FormControlLabel
+                value="cash"
+                name="radio-buttons"
+                control={<Radio />}
+                label={
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <PaymentsIcon style={{ color: 'green' }} />
+                    <p>Thanh toán tiền mặt khi nhận hàng</p>
+                  </Stack>
+                }
+              />
+
+              <FormControlLabel
+                value="banking"
+                name="radio-buttons"
+                control={<Radio />}
+                label={
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <AccountBalanceIcon style={{ color: 'blue' }} />
+                    <p>Thanh toán chuyển khoản ngân hàng online</p>
+                  </Stack>
+                }
+              />
+              <FormControlLabel
+                value="credit"
+                name="radio-buttons"
+                control={<Radio />}
+                label={
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <CreditCardIcon style={{ color: 'rgb(237, 95, 30)' }} />
+                    <p>Thanh toán bằng thẻ Credit</p>
+                  </Stack>
+                }
+              />
+              <FormControlLabel
+                value="paypal"
+                name="radio-buttons"
+                control={<Radio />}
+                label={
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <IconBrandPaypal
+                      size={26}
+                      strokeWidth={2}
+                      color={'#40a1bf'}
+                    />
+
+                    <p>Thanh toán với Paypal</p>
+                  </Stack>
+                }
+              />
+            </RadioGroup>
+          </FormControl>
+        </Stack>
       </Stack>
       <Grid item xs={12}>
         {matches ? (

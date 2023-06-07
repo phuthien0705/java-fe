@@ -1,10 +1,10 @@
 import cookie from 'js-cookie';
 
 class AuthService {
-  login = ({ accessToken, name, roles, id, email }: any) => {
+  login = ({ accessToken, name, roles, id, email, refreshToken }: any) => {
     cookie.set('accessToken', `${accessToken}`, { expires: 7 });
+    cookie.set('refreshToken', `${refreshToken}`, { expires: 7 });
     const userPayload = { name, roles, id, email };
-    console.log(userPayload);
     const userStringify = JSON.stringify(userPayload);
     localStorage.setItem('user', userStringify);
   };

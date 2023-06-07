@@ -1,5 +1,10 @@
-import axios, { AxiosRequestConfig } from 'axios';
 import cookie from 'js-cookie';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import {
+  clearCookiesAndLocalStorage,
+  setCredentialsToCookies,
+} from '@/common/authFunction';
+import { postGetRefreshToken } from '@/apis/refresh.api';
 
 export type IConfig = AxiosRequestConfig;
 
@@ -9,12 +14,31 @@ function getAccessToken() {
 }
 
 const requestConfig = {
-  baseURL: process.env.REACT_APP
-    ? `${process.env.REACT_APP}`
+  baseURL: process.env.API_URL
+    ? `${process.env.API_URL}`
     : 'https://bookstore-39jw3.ondigitalocean.app/api',
 };
 
 export const axiosInstance = axios.create(requestConfig);
+
+async function middlewareRefresh(error: AxiosError) {
+  try {
+    const { data } = await postGetRefreshToken();
+    setCredentialsToCookies({
+      accessToken: data.access.token,
+      refreshToken: data.refresh.token,
+    });
+
+    if (error?.config?.headers)
+      error.config.headers.Authorization = `Bearer ${data.access.token}`;
+  } catch (error) {
+    clearCookiesAndLocalStorage();
+    window.location.replace('/login');
+    return;
+  }
+
+  error?.config && axios(error.config);
+}
 
 export default function initRequest() {
   axiosInstance.interceptors.request.use(
@@ -38,6 +62,7 @@ export default function initRequest() {
     (error) => {
       switch (error.response?.status) {
         case 401: {
+          middlewareRefresh(error);
           break;
         }
         case 400: {
@@ -45,7 +70,6 @@ export default function initRequest() {
         }
         case 403: {
           alert('Bạn không có quyền truy cập vào trang này');
-
           break;
         }
         case 500: {

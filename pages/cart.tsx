@@ -1,8 +1,8 @@
+import dynamic from 'next/dynamic';
 import { Box, Paper, Container } from '@mui/material';
 import ProductLayout from '../layout/ProductLayot';
 import CartTitle from '../components/cart/CartTitle';
 import CartItems from '../components/cart/CartItems';
-import dynamic from 'next/dynamic';
 
 const Cart = () => {
   return (

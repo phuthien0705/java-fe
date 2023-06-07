@@ -5,17 +5,18 @@ import {
   removeFormCart,
   updateCart,
 } from '@/apis/cart.api';
-import ConfirmModal from '@/components/modals/ConfirmModal';
-import { toggleSnackbar } from '@/store/snackbarReducer';
 import { Grid, Box } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
+import { useIntl } from 'react-intl';
+import ConfirmModal from '@/components/modals/ConfirmModal';
 import ItemTable from '../ItemTable';
 import ItemTableMobile from '../ItemTableMobile';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import LinearProgress from '@mui/material/LinearProgress';
 import { IEachCartData } from '@/interfaces/compontents/cart.interface';
+import { toggleSnackbar } from '@/store/snackbarReducer';
 
 const ItemTab: React.FunctionComponent<{
   data: IEachCartData[];
@@ -24,7 +25,7 @@ const ItemTab: React.FunctionComponent<{
   isFetching: boolean;
 }> = ({ data, refetch, isLoading }) => {
   const matches = useMediaQuery('(min-width:900px)');
-
+  const intl = useIntl();
   const [showConfirmModal, setShowConfirmModal] = useState<any>(null);
   const [showConfirmClearCart, setShowConfirmClearCart] =
     useState<boolean>(false);
@@ -36,7 +37,20 @@ const ItemTab: React.FunctionComponent<{
     },
     [dispatch]
   );
-  const { mutate: updateCartFunc, isLoading: isUpdating } = useMutation(
+  const serverFailedContent = intl.formatMessage({ id: 'cart.serverFailed' });
+  const updateFailedContent = intl.formatMessage({ id: 'cart.updateFailed' });
+  const cancelContent = intl.formatMessage({ id: 'cancel' });
+  const confirmContent = intl.formatMessage({ id: 'confirm' });
+  const deleteItemContent = intl.formatMessage({ id: 'cart.deleteItem' });
+  const deleteAllItemContent = intl.formatMessage({ id: 'cart.deleteAllItem' });
+  const deleteAllItemQuestionContent = intl.formatMessage({
+    id: 'cart.deleteAllItemQuestion',
+  });
+  const deleteItemQuestionContent = intl.formatMessage({
+    id: 'cart.deleteItemQuestion',
+  });
+
+  const { mutate: updateCartFunc } = useMutation(
     (data: { bookId: string; quantity: number }) => updateCart(data),
     {
       onSuccess: () => {
@@ -45,12 +59,12 @@ const ItemTab: React.FunctionComponent<{
       onError: () => {
         toast({
           type: 'error',
-          message: 'Xảy ra lỗi trong quá trình cập nhật sản phẩm',
+          message: updateFailedContent,
         });
       },
     }
   );
-  const { mutate: removeFunc, isLoading: isRemoving } = useMutation(
+  const { mutate: removeFunc } = useMutation(
     (data: { bookId: string }) => removeFormCart(data),
     {
       onSuccess: () => {
@@ -59,13 +73,13 @@ const ItemTab: React.FunctionComponent<{
       onError: () => {
         toast({
           type: 'error',
-          message: 'Xảy ra lỗi trong quá trình cập nhật sản phẩm',
+          message: updateFailedContent,
         });
       },
     }
   );
 
-  const { mutate: checkItemFunc, isLoading: isCheckingItem } = useMutation(
+  const { mutate: checkItemFunc } = useMutation(
     ({ bookId, isChecked }: { bookId: string; isChecked: boolean }) =>
       addCheckedItem({ bookId, isChecked }),
     {
@@ -75,7 +89,7 @@ const ItemTab: React.FunctionComponent<{
       onError: () => {
         toast({
           type: 'error',
-          message: 'Máy chủ đang bận xin vui lòng thử lại sau',
+          message: serverFailedContent,
         });
       },
     }
@@ -89,7 +103,7 @@ const ItemTab: React.FunctionComponent<{
       onError: () => {
         toast({
           type: 'error',
-          message: 'Máy chủ đang bận xin vui lòng thử lại sau',
+          message: serverFailedContent,
         });
       },
     }
@@ -101,7 +115,7 @@ const ItemTab: React.FunctionComponent<{
     onError: () => {
       toast({
         type: 'error',
-        message: 'Máy chủ đang bận xin vui lòng thử lại sau',
+        message: serverFailedContent,
       });
     },
   });
@@ -171,10 +185,10 @@ const ItemTab: React.FunctionComponent<{
 
       <ConfirmModal
         open={showConfirmModal !== null}
-        contentHeader="Xóa sản phẩm"
-        textContent="Bạn có muốn xóa sản phẩm đang chọn?"
-        confirmContent="Xác nhận"
-        cancelContent="Hủy"
+        contentHeader={deleteItemContent}
+        textContent={deleteItemQuestionContent}
+        confirmContent={confirmContent}
+        cancelContent={cancelContent}
         handleClose={() => setShowConfirmModal(null)}
         handleConfirm={() => {
           handleDelete(showConfirmModal);
@@ -183,10 +197,10 @@ const ItemTab: React.FunctionComponent<{
       />
       <ConfirmModal
         open={showConfirmClearCart}
-        contentHeader="Xóa tất cả sản phẩm"
-        textContent="Bạn có muốn xóa tất cả sản phẩm đang chọn?"
-        confirmContent="Xác nhận"
-        cancelContent="Hủy"
+        contentHeader={deleteAllItemContent}
+        textContent={deleteAllItemQuestionContent}
+        confirmContent={confirmContent}
+        cancelContent={cancelContent}
         handleClose={() => setShowConfirmClearCart(false)}
         handleConfirm={() => {
           clearCartFunc();

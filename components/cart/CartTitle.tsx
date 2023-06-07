@@ -1,5 +1,6 @@
-import { Grid, Typography, Breadcrumbs, Link, Stack, Box } from '@mui/material';
+import { Typography, Breadcrumbs, Link, Stack, Box } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { FormattedMessage } from 'react-intl';
 
 const CartTitle: React.FunctionComponent = () => {
   return (
@@ -9,14 +10,18 @@ const CartTitle: React.FunctionComponent = () => {
       alignItems={{ xs: 'flex-start', sm: 'center' }}
     >
       <Box>
-        <Typography variant="h3">Giỏ hàng</Typography>
+        <Typography variant="h3">
+          <FormattedMessage id="cart.title" />
+        </Typography>
       </Box>
       <Box mt={{ xs: 1, sm: 0 }}>
         <Breadcrumbs separator={<NavigateNextIcon />} aria-label="breadcrumb">
           <Link color="text.primary" href="/">
-            Trang chủ
+            <FormattedMessage id="sidebar.home" />
           </Link>
-          <Typography color="inherit">Giỏ hàng</Typography>
+          <Typography color="inherit">
+            <FormattedMessage id="cart.title" />
+          </Typography>
         </Breadcrumbs>
       </Box>
     </Stack>

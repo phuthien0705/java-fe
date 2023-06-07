@@ -1,7 +1,8 @@
+import { ILoginResponse } from '@/interfaces/auth.interface';
 import httpRequest from '@/services/httpRequest';
 
 export const login = async (data: any) => {
-  return httpRequest.post('/auth/login', data);
+  return httpRequest.post<ILoginResponse>('/auth/login', data);
 };
 export const register = async (data: any) => {
   return httpRequest.post('/auth/register', data);
@@ -24,5 +25,5 @@ export const resetPassword = async (
   return httpRequest.post(`/auth/reset-password${params}`, data);
 };
 export const postLoginGoogle = (data: { accessToken: string }) => {
-  return httpRequest.post('/auth/google', data);
+  return httpRequest.post<ILoginResponse>('/auth/google', data);
 };

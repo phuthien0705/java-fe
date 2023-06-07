@@ -9,12 +9,6 @@ import {
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
-import AddIcon from '@mui/icons-material/Add';
 import Rating from '@mui/material/Rating';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useMutation } from 'react-query';
@@ -24,22 +18,25 @@ import { toggleSnackbar } from '@/store/snackbarReducer';
 import LoadingButton from '@mui/lab/LoadingButton';
 import AddressForm from '../forms/AddressForm';
 import {
-  IAddressModal,
   IReviewModal,
 } from '@/interfaces/compontents/modal.interface';
 import { useToast } from '@/hooks/useToast';
-import { IEachAddressOfUserData } from '@/interfaces/address.interface';
-import ConfirmModal from './ConfirmModal';
+import { ImageOrderStyle } from '../orders/ImageOrderStyle';
+import { addReview } from '@/apis/review.api';
 
 const ReviewModal: React.FunctionComponent<IReviewModal> = ({
   open,
   handleClose,
-  bookId,
+  book,
 }) => {
   const dispatch = useDispatch();
   const toast = useToast(dispatch, toggleSnackbar);
 
   const [rating, setRating] = useState<number | null>(null);
+  const [comment, setComment] = useState<string>('');
+
+  const [value, setValue] = useState<string | null>(null);
+  const [editMode, setEditMode] = useState<boolean | { data: any }>(false);
 
   const handleRatingChange = (
     event: React.ChangeEvent<{}>,
@@ -48,26 +45,45 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
     setRating(value);
   };
 
-  const [value, setValue] = useState<string | null>(null);
-  const [editMode, setEditMode] = useState<boolean | { data: any }>(false);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event?.target as any).value);
+  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(event.target.value);
   };
 
-  const { mutate: changeDefaultAddressFunc, isLoading } = useMutation(
-    (id: string) => setDefaultAddress(id, true),
+  const { mutate: createReviewFunc, isLoading } = useMutation(
+    (data: any) => addReview(data),
     {
       onSuccess: () => {
+        toast({
+          type: 'success',
+          message: `Thêm đánh giá sản phẩm thành công`,
+        });
         handleClose();
       },
       onError: () => {
         toast({
           type: 'error',
-          message: 'Xảy ra lỗi trong quá trình thêm đánh giá sản phẩm',
+          message: 'Xảy ra lỗi trong quá trình thêm đánh giá',
         });
       },
     }
   );
+
+  const handleAddReview = () => {
+    const reviewData = {
+      rating: rating,
+      comment: comment,
+      bookId: book.id,
+    };
+
+    createReviewFunc(reviewData);
+  };
+
+  useEffect(() => {
+    if (!open) {
+      setRating(0);
+      setComment('');
+    }
+  }, [open]);
 
   return (
     <Dialog onClose={() => handleClose()} open={open} fullWidth maxWidth="sm">
@@ -109,8 +125,26 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
         ) : (
           <>
             <Stack sx={{ marginBottom: 2 }} direction="column">
+              <Stack
+                sx={{ position: 'relative', marginBottom: 1 }}
+                direction="row"
+              >
+                <ImageOrderStyle
+                  alt={book.name}
+                  width="76"
+                  height="76"
+                  src={book.images}
+                />
+                <Typography
+                  fontSize="14px"
+                  color="black"
+                  sx={{ marginLeft: 2, marginTop: 1 }}
+                >
+                  {book.name}
+                </Typography>
+              </Stack>
               <Box
-                sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}
+                sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}
               >
                 <Typography
                   variant="body1"
@@ -121,16 +155,14 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
                 </Typography>
                 <Rating
                   name="rating"
-                  value={2}
+                  value={rating}
                   onChange={handleRatingChange}
                   precision={1}
                   size="large"
                   emptyIcon={<StarBorderIcon fontSize="inherit" />}
                 />
               </Box>
-              <Box
-                sx={{ alignItems: 'center', marginBottom: 1 }}
-              >
+              <Box sx={{ alignItems: 'center', marginBottom: 1 }}>
                 <Typography
                   variant="body1"
                   fontWeight="bold"
@@ -140,6 +172,8 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
                 </Typography>
                 <TextField
                   multiline
+                  value={comment}
+                  onChange={handleCommentChange}
                   rows={4}
                   placeholder="Nhập lời nhận xét của bạn..."
                   fullWidth
@@ -160,9 +194,13 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
                 borderTop: '1px solid rgba(0,0,0,0.1)',
               }}
             >
-              <LoadingButton loading={isLoading} variant="contained">
+              <Button
+                variant="contained"
+                disabled={!rating || !comment || isLoading}
+                onClick={handleAddReview}
+              >
                 Hoàn thành
-              </LoadingButton>
+              </Button>
             </Box>
           </>
         )}

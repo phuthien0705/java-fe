@@ -42,6 +42,6 @@ export interface IAddressModal {
 export interface IReviewModal {
   open: boolean;
   handleClose: () => void;
-  bookId: string;
+  book: any;
   refetchReviews: () => void;
 }

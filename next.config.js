@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
-    REACT_APP: process.env.REACT_APP,
+    API_URL: process.env.API_URL,
     GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
     SITE_URL: process.env.SITE_URL,
     CLIENT_ID: process.env.CLIENT_ID,

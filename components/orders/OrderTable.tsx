@@ -28,6 +28,11 @@ const OrderTable: React.FunctionComponent<IOrderTable> = ({
 }) => {
   const sortedItems = sortOrdersByDate(items);
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
+  const [reviewBook, setReviewBook] = useState({
+    id: '',
+    name: '',
+    images: '',
+  });
   // const calcTotalBookPrice = useCallback((item: any) => {
   //   let total = 0;
   //   item?.books?.forEach((element: any) => {
@@ -169,7 +174,14 @@ const OrderTable: React.FunctionComponent<IOrderTable> = ({
                             width: { xs: 'fit-content', sm: 'inherit' },
                             marginRight: '10px',
                           }}
-                          onClick={() => setOpenReviewModal(true)}
+                          onClick={() => {
+                            setOpenReviewModal(true);
+                            setReviewBook({
+                              id: item._id,
+                              name: item.name,
+                              images: item.imageUrl
+                            })
+                          }}
                         >
                           Đánh giá
                         </Button>
@@ -251,7 +263,7 @@ const OrderTable: React.FunctionComponent<IOrderTable> = ({
         handleClose={() => {
           setOpenReviewModal(false);
         }}
-        bookId={''}
+        book={reviewBook}
         refetchReviews={function (): void {
           throw new Error('Function not implemented.');
         }}

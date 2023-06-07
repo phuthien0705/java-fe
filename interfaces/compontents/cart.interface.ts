@@ -52,6 +52,7 @@ export interface IProductAdded {
   amount: string | number;
 }
 export interface ISubmitCart {
+  userId: string;
   currentIndex: number;
   setCurrentIndex: Function;
   items: IEachCartData[];

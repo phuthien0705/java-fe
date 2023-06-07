@@ -68,11 +68,12 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
 
   const loginGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      const result: any = await postLoginGoogle({
+      const result = await postLoginGoogle({
         accessToken: tokenResponse.access_token,
       });
       authService.login({
         accessToken: result.tokens.access.token,
+        refreshToken: result.tokens.refresh.token,
         name: result.user.name,
         id: result.user.id,
         roles: result.user.roles,
@@ -129,9 +130,9 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
               variant="outlined"
               sx={{
                 cursor: 'unset',
-                m: 2,
-                py: 0.5,
-                px: 7,
+                m: theme.spacing(2),
+                py: theme.spacing(0.5),
+                px: theme.spacing(7),
                 borderColor: `${theme.palette.grey[100]} !important`,
                 color: `${theme.palette.grey[900]}!important`,
                 fontWeight: 500,
@@ -154,7 +155,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
           alignItems="center"
           justifyContent="center"
         >
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: theme.spacing(2) }}>
             <Typography variant="subtitle1">
               {<FormattedMessage id="page.login.content3" />}
             </Typography>
@@ -178,18 +179,19 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
             .max(255, localeContent.passwordMaxChar)
             .required(localeContent.passwordRequired),
         })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        onSubmit={async (values, { setStatus, setSubmitting }) => {
           try {
             const req = { email: values.email, password: values.password };
-            const res: any = await login(req);
+            const result = await login(req);
             authService.login({
-              accessToken: res.tokens.access.token,
-              name: res.user.name,
-              id: res.user.id,
-              roles: res.user.roles,
-              email: res.user.email,
+              accessToken: result.tokens.access.token,
+              refreshToken: result.tokens.refresh.token,
+              name: result.user.name,
+              id: result.user.id,
+              roles: result.user.roles,
+              email: result.user.email,
             });
-            if (!res.user.isActive) {
+            if (!result.user.isActive) {
               await reSendVerifyEmail();
               setShowAlert({
                 type: 'success',
@@ -202,7 +204,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
             }
             setStatus({ success: true });
             setSubmitting(false);
-            if (!checkIsAdminOrManager(res?.user?.roles)) {
+            if (!checkIsAdminOrManager(result?.user?.roles)) {
               router.push('/');
             } else {
               router.push('/admin/statistic');
@@ -214,7 +216,6 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
               content: localeContent.emailOrPasswordIncorrect,
             });
             setStatus({ success: false });
-
             setSubmitting(false);
           }
         }}

@@ -97,7 +97,7 @@ const SocketsProvider = ({ children }: { children: ReactNode }) => {
           toast({
             message:
               'Có lỗi xảy ra khi kết nối với máy chủ, vui lòng kiểm tra lại mạng và thử tải lại trang',
-            type: 'errror',
+            type: 'error',
           });
         } else {
           setBackdrop(false);
@@ -118,7 +118,7 @@ const SocketsProvider = ({ children }: { children: ReactNode }) => {
           toast({
             message:
               'Có lỗi xảy ra khi kết nối với máy chủ, vui lòng kiểm tra lại mạng và thử tải lại trang',
-            type: 'errror',
+            type: 'error',
           });
         }
       });

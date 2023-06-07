@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Box, Container, useTheme } from '@mui/material';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -18,7 +17,6 @@ const Home = () => {
   );
   const theme = useTheme();
   const hostname = getHostName();
-  const { locales } = useRouter();
   const intl = useIntl();
   const title = intl.formatMessage({ id: 'page.home.head.title' });
   const description = intl.formatMessage({
