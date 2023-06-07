@@ -1,7 +1,7 @@
 import { ILoginResponse } from '@/interfaces/auth.interface';
 import httpRequest from '@/services/httpRequest';
 
-export const login = async (data: any) => {
+export const login = async (data: { identity: string; password: string }) => {
   return httpRequest.post<ILoginResponse>('/auth/login', data);
 };
 export const register = async (data: any) => {

@@ -1,19 +1,20 @@
 import { ReactNode } from 'react';
+import { IEachProductData } from './product.interface';
 
 export interface IProductCard {
-  product: any;
+  product: IEachProductData;
   slideMode?: boolean;
   isLoading?: boolean;
   index: number;
 }
 
 export interface IProductCardItem {
-  product: any;
+  product: IEachProductData;
   index: number;
 }
 
 export interface IProductCardItems {
-  data: any;
+  data: IEachProductData[];
   title?: ReactNode | string;
   titleIcon?: ReactNode;
   titleBackground?: string;

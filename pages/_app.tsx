@@ -120,9 +120,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             <QueryClientProvider client={queryClient}>
               <ThemeProvider theme={themes(customization)}>
                 <MainContext.Provider value={{ backdrop, setBackdrop }}>
-                  <SocketsProvider>
-                    <Component {...pageProps} />
-                  </SocketsProvider>
+                  <Component {...pageProps} />
                 </MainContext.Provider>
                 <Backdrop
                   sx={{

@@ -34,7 +34,7 @@
   "page.login.emailValidation": "Email must be in the correct format",
   "page.login.emailMaxChar": "Email up to 255 characters",
   "page.login.emailRequired": "Email is required",
-  "page.login.passwordMinChar": "Password must be at least 8 characters",
+  "page.login.passwordMinChar": "Password must be at least 6 characters",
   "page.login.passwordMaxChar": "Password up to 255 characters",
   "page.login.passwordRequired": "Password is required",
   "footer.service": "Service",

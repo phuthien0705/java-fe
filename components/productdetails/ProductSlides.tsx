@@ -50,7 +50,7 @@ const ProductSlides: FC<IProductSlides> = ({
   const classes = useStyles();
   const matchSm = useMediaQuery('(max-width:600px)');
   const matchMd = useMediaQuery('(max-width:900px)');
-  if (!isSlideLoading && detailData && detailData?.genres?.length === 0) {
+  if (slideData && slideData.datas.length === 0) {
     return <RelativeProductEmpty />;
   }
   return (
@@ -69,9 +69,8 @@ const ProductSlides: FC<IProductSlides> = ({
       >
         {/* get only 10 item */}
         {detailData &&
-          detailData?.genres?.length !== 0 &&
-          slideData?.data &&
-          slideData?.data.slice(0, 10).map((data: any, index: number) => (
+          slideData?.datas &&
+          slideData?.datas.slice(0, 10).map((data, index: number) => (
             <SwiperSlide key={index}>
               <ProductCard
                 product={data}

@@ -3,7 +3,7 @@ import { BOOK_DETAIL } from '../../constants/queryKeyName';
 import { useQuery } from 'react-query';
 
 const useGetListBookDetail = (id: string | number | null, enabled: boolean) => {
-  const getListQuery: any = useQuery(
+  const getListQuery = useQuery(
     [BOOK_DETAIL, id],
     () => getBookDetailById(id),
     {
@@ -12,7 +12,6 @@ const useGetListBookDetail = (id: string | number | null, enabled: boolean) => {
       enabled,
     }
   );
-
   return getListQuery;
 };
 

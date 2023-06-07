@@ -87,7 +87,7 @@ const aboutUs = () => {
               direction="row"
               spacing={2}
               justifyContent="center"
-              alignItems="center"
+              alignItems="start"
             >
               <CardMember />
             </Grid>

@@ -1,5 +1,7 @@
 import createSearchParams from '@/common/createSearchParams';
 import httpRequest from '../services/httpRequest';
+import { IPaginationResponse } from '@/interfaces/general.interface';
+import { IEachProductData } from '@/interfaces/compontents/product.interface';
 
 export const getAllBook = async (
   page: number,
@@ -48,7 +50,7 @@ export const filterBook = async ({
 export const getBookDetailById = async (
   id: string | number | null | undefined
 ) => {
-  return httpRequest.get(`books/${id}`);
+  return httpRequest.get<IEachProductData>(`books/${id}`);
 };
 export const editBook = async (
   id: string | number | undefined,
@@ -72,16 +74,23 @@ export const createBook = async (data: FormData | any) => {
 };
 
 export const getTopSelling = async () => {
-  return httpRequest.get(`/books?limit=5&page=1&sortBy=createdAt`);
+  return httpRequest.get<IPaginationResponse<IEachProductData>>(
+    `/books?limit=5&page=1&sortBy=createdDate`
+  );
 };
 
-export const getRelateBook = async (genres = '') => {
-  if (genres) return httpRequest.get(`/books?limit=10&page=1&genres=${genres}`);
-  return httpRequest.get(`/books?limit=10&page=1`);
+export const getRelateBook = async (name = '') => {
+  if (name)
+    return httpRequest.get<IPaginationResponse<IEachProductData>>(
+      `/books?limit=10&page=1&search=${name}`
+    );
+  return httpRequest.get<IPaginationResponse<IEachProductData>>(
+    `/books?limit=10&page=1`
+  );
 };
 
 export const getListBookByGenre = async (genresid: any, slideToShow = 5) => {
-  return httpRequest.get(
+  return httpRequest.get<IPaginationResponse<IEachProductData>>(
     `/books?limit=${slideToShow}&page=1&genres=${genresid}`
   );
 };

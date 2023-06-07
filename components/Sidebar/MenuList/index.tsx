@@ -17,16 +17,10 @@ const MenuList = () => {
   const listItem = useMemo(
     () => [
       {
-        title: 'Thống kê',
-        url: '/admin/statistic',
-        icon: IconChartBar,
-      },
-      {
         title: 'Bài viết',
         url: '/admin/post',
         icon: IconArticle,
       },
-
       {
         title: 'Sản phẩm',
         url: '/admin/product',
@@ -65,7 +59,6 @@ const MenuList = () => {
   return (
     <>
       <List>
-        {/* <NavItem item={listItem[0]} level={1} /> */}
         {listItem.map((item, _index) => (
           <NavItem key={_index} item={item} />
         ))}

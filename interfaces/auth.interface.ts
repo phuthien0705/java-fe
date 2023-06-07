@@ -1,16 +1,10 @@
 export interface ILoginResponse {
-  tokens: {
-    access: { expires: string; token: string };
-    refresh: { expires: string; token: string };
-  };
+  accessToken: string;
   user: {
-    deletedAt: string | null;
     email: string;
-    id: string;
-    isActive: boolean;
-    isDeleted: boolean;
-    isEmailVerified: boolean;
+    id: number;
     name: string;
     roles: Array<string>;
+    username: string;
   };
 }

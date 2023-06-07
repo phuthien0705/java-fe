@@ -1,5 +1,7 @@
 import createSearchParams from '@/common/createSearchParams';
 import httpRequest from '../services/httpRequest';
+import { IPaginationResponse } from '@/interfaces/general.interface';
+import { IEachGenreData } from '@/interfaces/genre.interface';
 
 export const getAllGenre = async (
   page: number,
@@ -7,7 +9,7 @@ export const getAllGenre = async (
   searchFields = [],
   value = ''
 ) => {
-  return httpRequest.get(
+  return httpRequest.get<IPaginationResponse<IEachGenreData>>(
     `/genres?limit=${limit}&page=${page}${createSearchParams(
       searchFields,
       value
@@ -15,7 +17,9 @@ export const getAllGenre = async (
   );
 };
 export const getAllGenreClient = async () => {
-  return httpRequest.get('/genres?limit=100');
+  return httpRequest.get<IPaginationResponse<IEachGenreData>>(
+    '/genres?limit=100'
+  );
 };
 export const editGenre = async (
   id: string | number | undefined,

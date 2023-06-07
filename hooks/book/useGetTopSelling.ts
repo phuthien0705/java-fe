@@ -3,10 +3,8 @@ import { getTopSelling } from '@/apis/product.api';
 import { TOP_SELLING } from '@/constants/queryKeyName';
 
 const useGetTopSelling = () => {
-  const getListQuery: any = useQuery(TOP_SELLING, () => getTopSelling(), {
-    cacheTime: Infinity,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
+  const getListQuery = useQuery(TOP_SELLING, () => getTopSelling(), {
+    refetchOnWindowFocus: true,
   });
 
   return getListQuery;

@@ -8,7 +8,7 @@ const useGetListGenre = (
   searchFields = [],
   value = ''
 ) => {
-  const getListQuery: any = useQuery(
+  const getListQuery = useQuery(
     [GENRES],
     () => getAllGenre(page, limit, searchFields, value),
     {

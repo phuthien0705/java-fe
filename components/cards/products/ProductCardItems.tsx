@@ -30,10 +30,8 @@ const ProductCardItems: React.FunctionComponent<IProductCardItems> = ({
   const dataFiltered = !genreId
     ? data
     : data
-    ? data?.filter((item: any) => {
-        if (
-          !item?.genres?.every((itemGenre: any) => itemGenre?.id != genreId)
-        ) {
+    ? data?.filter((item) => {
+        if (!item?.genres?.every((itemGenre) => itemGenre?.id != genreId)) {
           return item;
         }
       })
@@ -47,7 +45,7 @@ const ProductCardItems: React.FunctionComponent<IProductCardItems> = ({
     }
 
     return dataFiltered?.length > 0 ? (
-      dataFiltered.slice(0, slideToShow).map((product: any, index: number) => {
+      dataFiltered.slice(0, slideToShow).map((product, index: number) => {
         return <ProductCardItem key={index} product={product} index={index} />;
       })
     ) : (

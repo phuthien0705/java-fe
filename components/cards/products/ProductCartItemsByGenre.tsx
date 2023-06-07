@@ -16,15 +16,13 @@ const ProductCardItemsByGenre: React.FunctionComponent<
   );
   const renderProducts = () => {
     if (isLoading)
-      return (
-        <>
-          <ProductCardSkeleton />
-          <ProductCardSkeleton />
-          <ProductCardSkeleton />
-          <ProductCardSkeleton />
-          <ProductCardSkeleton />
-        </>
-      );
+      return new Array(slideToShow)
+        .fill(0)
+        .map((placeholder, placeholderIndex) => (
+          <div key={placeholderIndex}>
+            <ProductCardSkeleton />
+          </div>
+        ));
 
     return dataFiltered && dataFiltered?.datas?.length > 0 ? (
       dataFiltered?.datas.map((product: any, index: number) => {

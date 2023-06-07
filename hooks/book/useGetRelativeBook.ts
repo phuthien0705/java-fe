@@ -1,26 +1,17 @@
+import { IEachProductData } from '@/interfaces/compontents/product.interface';
 import { getRelateBook } from '../../apis/product.api';
-import { BOOKS_CLIENT } from '../../constants/queryKeyName';
+import { REALTED_BOOK } from '../../constants/queryKeyName';
 import { useQuery } from 'react-query';
 
-const useGetRelativeBook = (data: any, enabled = true) => {
-  let genres = '';
-  data &&
-    data?.genres?.forEach((genre: any, _index: number) => {
-      if (_index === data?.genres?.length - 1) {
-        genres += genre?.id;
-      } else {
-        genres += genre?.id + '_';
-      }
-    });
-  const getListQuery: any = useQuery(
-    BOOKS_CLIENT,
-    () => getRelateBook(genres),
-    {
-      refetchOnMount: true,
-      keepPreviousData: true,
-      enabled: enabled,
-    }
-  );
+const useGetRelativeBook = (
+  data: IEachProductData | undefined = undefined,
+  enabled = true
+) => {
+  const getListQuery = useQuery(REALTED_BOOK, () => getRelateBook(data?.name), {
+    refetchOnMount: true,
+    keepPreviousData: true,
+    enabled,
+  });
 
   return getListQuery;
 };

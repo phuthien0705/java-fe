@@ -72,8 +72,8 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
         accessToken: tokenResponse.access_token,
       });
       authService.login({
-        accessToken: result.tokens.access.token,
-        refreshToken: result.tokens.refresh.token,
+        accessToken: result.accessToken,
+        refreshToken: '',
         name: result.user.name,
         id: result.user.id,
         roles: result.user.roles,
@@ -82,7 +82,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
       if (!checkIsAdminOrManager(result?.user?.roles)) {
         router.push('/');
       } else {
-        router.push('/admin/statistic');
+        router.push('/admin/post');
       }
     },
     onError: () => {
@@ -99,7 +99,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Button
             onClick={() => loginGoogle()}
             disableElevation
@@ -116,7 +116,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
             <GoogleIcon sx={{ marginRight: '8px' }} />
             {<FormattedMessage id="page.login.googleContent" />}
           </Button>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Box
             sx={{
@@ -175,39 +175,39 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
             .max(255, localeContent.emailMaxChar)
             .required(localeContent.emailRequired),
           password: Yup.string()
-            .min(8, localeContent.passwordMinChar)
+            .min(6, localeContent.passwordMinChar)
             .max(255, localeContent.passwordMaxChar)
             .required(localeContent.passwordRequired),
         })}
         onSubmit={async (values, { setStatus, setSubmitting }) => {
           try {
-            const req = { email: values.email, password: values.password };
+            const req = { identity: values.email, password: values.password };
             const result = await login(req);
             authService.login({
-              accessToken: result.tokens.access.token,
-              refreshToken: result.tokens.refresh.token,
+              accessToken: result.accessToken,
+              refreshToken: '',
               name: result.user.name,
               id: result.user.id,
               roles: result.user.roles,
               email: result.user.email,
             });
-            if (!result.user.isActive) {
-              await reSendVerifyEmail();
-              setShowAlert({
-                type: 'success',
-                content: localeContent.unActiveAccount,
-              });
-              // authService.logOut();
-              setStatus({ success: true });
-              setSubmitting(false);
-              return;
-            }
+            // if (!result.user.isActive) {
+            //   await reSendVerifyEmail();
+            //   setShowAlert({
+            //     type: 'success',
+            //     content: localeContent.unActiveAccount,
+            //   });
+            //   // authService.logOut();
+            //   setStatus({ success: true });
+            //   setSubmitting(false);
+            //   return;
+            // }
             setStatus({ success: true });
             setSubmitting(false);
             if (!checkIsAdminOrManager(result?.user?.roles)) {
               router.push('/');
             } else {
-              router.push('/admin/statistic');
+              router.push('/admin/post');
             }
           } catch (err) {
             console.error(err);

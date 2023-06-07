@@ -27,14 +27,14 @@ const Home = () => {
     if (!isGenreLoading) {
       return (
         genreData &&
-        genreData?.datas?.slice(0, 3)?.map((genre: any) => {
+        genreData.datas?.slice(0, 3)?.map((genre) => {
           return (
             <ProductCardItemsByGenre
-              key={genre?.id}
+              key={genre.id}
               slideToShow={5}
-              title={genre?.name}
+              title={genre.name}
               titleBackground={'#e8d5f9'}
-              genreId={genre?.id}
+              genreId={genre.id}
             />
           );
         })
@@ -54,11 +54,6 @@ const Home = () => {
         <link rel="alternate" href={`${hostname}`} hrefLang="x-default" />
         <link rel="alternate" href={`${hostname}`} hrefLang="vi" />
         <link rel="alternate" href={`${hostname}/en`} hrefLang="en" />
-        <link
-          rel="alternate"
-          href="http://example.com/nl-NL"
-          hrefLang="nl-NL"
-        />
       </Head>
       <HomeLayout>
         <Container
@@ -100,7 +95,7 @@ const Home = () => {
             <ProductCardItems
               slideToShow={4}
               isLoading={isTopSellLoading}
-              data={topSelling?.datas}
+              data={topSelling?.datas ?? []}
               title={<p>{<FormattedMessage id="page.home.topselling" />}</p>}
               titleIcon={<LocalFireDepartmentIcon color="error" />}
               titleBackground="#FCDDEF"

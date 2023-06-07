@@ -34,7 +34,7 @@
   "page.login.emailValidation": "Email phải đúng định dạng",
   "page.login.emailMaxChar": "Email tối đa 255 ký tự",
   "page.login.emailRequired": "Email là bắt buộc",
-  "page.login.passwordMinChar": "Mật khẩu phải ít nhất 8 ký tự",
+  "page.login.passwordMinChar": "Mật khẩu phải ít nhất 6 ký tự",
   "page.login.passwordMaxChar": "Mật khẩu tối đa 255 ký tự",
   "page.login.passwordRequired": "Mật khẩu là bắt buộc",
   "footer.service": "Dịch Vụ",
