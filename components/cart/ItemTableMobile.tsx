@@ -44,15 +44,14 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
             <Checkbox
               sx={{ height: 'fit-content' }}
               checked={
-                items?.every(
-                  (item: IEachCartData) => item.isChecked === true
-                ) || false
+                items?.every((item: IEachCartData) => item.checked === true) ||
+                false
               }
               onChange={() => {
                 checkAllItem &&
                   checkAllItem({
-                    isChecked: !items?.every(
-                      (item: IEachCartData) => item?.isChecked == true
+                    checked: !items?.every(
+                      (item: IEachCartData) => item?.checked == true
                     ),
                   });
               }}
@@ -68,7 +67,7 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
           sx={{
             color: 'red',
             cursor: 'pointer',
-            display: items?.every((item: any) => item?.isChecked == true)
+            display: items?.every((item: any) => item?.checked == true)
               ? 'inline-block'
               : 'none',
           }}
@@ -79,7 +78,7 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
       <Stack spacing={theme.spacing(4)}>
         {items.map(
           (item: IEachCartData) =>
-            ((addressMode && item?.isChecked === true) || !addressMode) && (
+            ((addressMode && item?.checked === true) || !addressMode) && (
               <Stack
                 key={item.bookId}
                 direction="row"
@@ -90,12 +89,12 @@ const ItemTableMobile: FC<IItemTableMobile> = ({
                   {!addressMode && (
                     <Checkbox
                       sx={{ height: 'fit-content' }}
-                      checked={item?.isChecked || false}
+                      checked={item?.checked || false}
                       onChange={() => {
                         checkItem &&
                           checkItem({
                             bookId: item.bookId,
-                            isChecked: !item?.isChecked,
+                            checked: !item?.checked,
                           });
                       }}
                     />

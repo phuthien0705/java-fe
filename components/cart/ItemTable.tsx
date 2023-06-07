@@ -50,14 +50,14 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                         sx={{ height: 'fit-content' }}
                         checked={
                           !!items?.every(
-                            (item: IEachCartData) => item.isChecked == true
+                            (item: IEachCartData) => item.checked == true
                           )
                         }
                         onChange={() => {
                           checkAllItem &&
                             checkAllItem({
-                              isChecked: !items?.every(
-                                (item: IEachCartData) => item.isChecked == true
+                              checked: !items?.every(
+                                (item: IEachCartData) => item.checked == true
                               ),
                             });
                         }}
@@ -74,7 +74,7 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                       color: 'red',
                       cursor: 'pointer',
                       display: items?.every(
-                        (item: any) => item?.isChecked == true
+                        (item: any) => item?.checked == true
                       )
                         ? 'inline-block'
                         : 'none',
@@ -103,7 +103,7 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
         <TableBody>
           {items.map(
             (row: IEachCartData) =>
-              ((addressMode && row?.isChecked === true) || !addressMode) && (
+              ((addressMode && row?.checked === true) || !addressMode) && (
                 <TableRow key={row.bookId}>
                   <TableCell sx={{ maxWidth: '350px' }}>
                     <Stack
@@ -114,12 +114,12 @@ const ItemTable: React.FunctionComponent<IItemTable> = ({
                       {!addressMode && (
                         <Checkbox
                           sx={{ height: 'fit-content' }}
-                          checked={!!row?.isChecked}
+                          checked={!!row?.checked}
                           onChange={() => {
                             checkItem &&
                               checkItem({
                                 bookId: row.bookId,
-                                isChecked: !row.isChecked,
+                                checked: !row.checked,
                               });
                           }}
                         />

@@ -56,7 +56,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
   } = useGetShippingCost();
 
   const isUnCheckAll = items.every(
-    (item: IEachCartData) => item.isChecked === false
+    (item: IEachCartData) => item.checked === false
   );
 
   const toast = useCallback(
@@ -146,7 +146,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
                         ? 0
                         : items.reduce(
                             (prev: number, curr: IEachCartData) =>
-                              curr.isChecked === true
+                              curr.checked === true
                                 ? Number(prev) +
                                   Number(curr.price) * Number(curr.quantity)
                                 : Number(prev) + 0,
@@ -167,7 +167,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
               Quay lại
             </Button>
             <Button
-              disabled={items?.every((item: any) => item?.isChecked == false)}
+              disabled={items?.every((item: any) => item?.checked == false)}
               sx={{ width: 'fit-content' }}
               variant="contained"
               fullWidth

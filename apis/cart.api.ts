@@ -26,10 +26,10 @@ export const removeFormCart = async (data: { bookId: string }) => {
 };
 export const addCheckedItem = async (data: {
   bookId: string;
-  isChecked: boolean;
+  checked: boolean;
 }) => {
   return httpRequest.put('/cart/checked-item', data);
 };
-export const addAllCheckedItem = async (data: { isChecked: boolean }) => {
+export const addAllCheckedItem = async (data: { checked: boolean }) => {
   return httpRequest.put('/cart/checked-all-items', data);
 };

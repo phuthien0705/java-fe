@@ -4,7 +4,7 @@ import { IEachAddressOfUserData } from '../address.interface';
 export interface IEachCartData {
   bookId: string;
   imageUrl: string;
-  isChecked: boolean;
+  checked: boolean;
   name: string;
   price: number;
   priceDiscount: number;
@@ -13,9 +13,14 @@ export interface IEachCartData {
 }
 
 export interface ICartResponse {
-  id: string;
   items: IEachCartData[];
-  userId: string;
+  user: {
+    email: string;
+    id: number;
+    name: string;
+    roles: Array<string>;
+    username: string;
+  };
 }
 
 export interface ICartSection {
@@ -52,7 +57,7 @@ export interface IProductAdded {
   amount: string | number;
 }
 export interface ISubmitCart {
-  userId: string;
+  userId: number;
   currentIndex: number;
   setCurrentIndex: Function;
   items: IEachCartData[];

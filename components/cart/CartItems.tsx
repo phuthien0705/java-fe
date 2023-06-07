@@ -48,13 +48,13 @@ const CartItems: React.FunctionComponent = () => {
           >
             <Tab
               icon={<ShoppingCartIcon />}
-              label="Giỏ hàng"
+              label={cartContent}
               disabled={currentIndex !== 0}
             />
 
             <Tab
               icon={<AssignmentIcon />}
-              label="Mua hàng"
+              label={paymentContent}
               disabled={currentIndex !== 1}
             />
           </Tabs>
@@ -88,7 +88,7 @@ const CartItems: React.FunctionComponent = () => {
 
         {data?.items && data.items?.length !== 0 && (
           <SubmitCart
-            userId={data?.userId}
+            userId={data?.user?.id}
             items={data?.items ?? []}
             setCurrentIndex={setCurrentIndex}
             currentIndex={currentIndex}

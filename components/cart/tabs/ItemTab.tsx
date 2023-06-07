@@ -80,8 +80,8 @@ const ItemTab: React.FunctionComponent<{
   );
 
   const { mutate: checkItemFunc } = useMutation(
-    ({ bookId, isChecked }: { bookId: string; isChecked: boolean }) =>
-      addCheckedItem({ bookId, isChecked }),
+    ({ bookId, checked }: { bookId: string; checked: boolean }) =>
+      addCheckedItem({ bookId, checked: checked }),
     {
       onSuccess: () => {
         refetch();
@@ -95,7 +95,8 @@ const ItemTab: React.FunctionComponent<{
     }
   );
   const { mutate: checkAllItemFunc } = useMutation(
-    ({ isChecked }: { isChecked: boolean }) => addAllCheckedItem({ isChecked }),
+    ({ checked }: { checked: boolean }) =>
+      addAllCheckedItem({ checked: checked }),
     {
       onSuccess: () => {
         refetch();
