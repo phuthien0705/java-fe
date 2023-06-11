@@ -5,7 +5,6 @@ import { scrollToTop } from '@/utils/scrollToTop';
 
 const ScrollToTopButton: React.FunctionComponent = () => {
   const [visible, setVisible] = useState<boolean>(false);
-
   const toggleVisible = useCallback(() => {
     const scrolled = document.documentElement.scrollTop;
     if (scrolled > 300) {
@@ -23,7 +22,13 @@ const ScrollToTopButton: React.FunctionComponent = () => {
   }, [toggleVisible]);
 
   return (
-    <Button sx={{ width: 'fit-content', height: 'fit-content' }}>
+    <Button
+      sx={{
+        width: 'fit-content',
+        height: 'fit-content',
+        backgroundColor: `#343b58 !important`,
+      }}
+    >
       <Fab
         onClick={scrollToTop}
         style={{
@@ -35,6 +40,7 @@ const ScrollToTopButton: React.FunctionComponent = () => {
           height: '40px',
           justifyContent: 'center',
           alignItems: 'center',
+          backgroundColor: `#343b58 !important`,
         }}
         color="secondary"
         size="small"
