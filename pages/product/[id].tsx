@@ -308,7 +308,7 @@ const ProductDetail = () => {
                         fontSize={50}
                         lineHeight={0.8}
                       >
-                        {data?.rating ?? 0}
+                        {Math.round((data?.rating ?? 0) * 10) / 10}
                       </Typography>
                       <Typography
                         variant="body1"
