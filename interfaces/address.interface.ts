@@ -20,6 +20,3 @@ export interface IEachAddressOfUserData {
   city: IEachCityData;
   default: boolean;
 }
-export interface IShippingCostResponse {
-  value: number;
-}

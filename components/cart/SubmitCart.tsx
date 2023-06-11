@@ -1,9 +1,8 @@
 import { useCallback, useContext } from 'react';
 import { Stack, Button, Container, Box, Typography } from '@mui/material';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { makeOrder } from '@/apis/checkout.api';
-import { useRouter } from 'next/router';
 import {
   IEachCartData,
   ISubmitCart,
@@ -13,6 +12,7 @@ import { moneyFormat } from '@/utils/moneyFormat';
 import useGetShippingCost from '@/hooks/address/useGetShippingCost';
 import { CartItemContext } from './CartItems';
 import { EProcessPayment } from '@/constants/processPayment';
+import { CART_CLIENT, SHIPPING_COST } from '@/constants/queryKeyName';
 
 const payMethodMaping = (method: string): { EMethod: EProcessPayment } => {
   switch (method) {
@@ -44,13 +44,12 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
   currentIndex,
   setCurrentIndex,
   items,
-  refetchListCart,
 }) => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { payMethod, setMethod } = useContext(CartItemContext);
-  const router = useRouter();
   const {
-    queryReturn: { data },
+    queryReturn: { data: shippingCost },
   } = useGetShippingCost();
 
   const isUnCheckAll = items.every(
@@ -75,7 +74,8 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
       onSuccess: () => {
         toast({ type: 'success', message: 'Mua hàng thành công' });
         setCurrentIndex(0);
-        refetchListCart();
+        queryClient.refetchQueries([SHIPPING_COST]);
+        queryClient.refetchQueries([CART_CLIENT]);
       },
       onError: () => {
         toast({
@@ -115,7 +115,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
           alignItems={'center'}
         >
           <Stack>
-            {!isUnCheckAll && (
+            {!isUnCheckAll && currentIndex !== 0 && (
               <Stack direction="row" spacing={2}>
                 <Typography
                   sx={{ fontWeight: 600, fontSize: '16px', color: '#000' }}
@@ -125,7 +125,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
                 <Typography
                   sx={{ fontWeight: 500, fontSize: '16px', color: '#000' }}
                 >
-                  {moneyFormat(data?.value ?? 0)}
+                  {moneyFormat(shippingCost ?? 0)}
                 </Typography>
               </Stack>
             )}
@@ -149,7 +149,7 @@ const SubmitCart: React.FunctionComponent<ISubmitCart> = ({
                                   Number(curr.price) * Number(curr.quantity)
                                 : Number(prev) + 0,
                             0
-                          ) + (data?.value ?? 0)
+                          ) + (currentIndex === 0 ? 0 : shippingCost ?? 0)
                     )
                   : 0}
               </Typography>

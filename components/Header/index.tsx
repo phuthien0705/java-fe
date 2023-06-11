@@ -37,17 +37,13 @@ const Header: FC<IHeader> = ({
   const { data, isLoading, isFetching, refetch } = useGetListCart();
   const matches = useMediaQuery('(min-width:900px)');
   const theme = useTheme();
-  const [page, setPage] = useState<number>(1);
 
-  const {
-    queryReturn: { data: notificationData, isLoading: isLoadingNotification },
-  } = useGetNotifications(page, 5);
-  console.log(notificationData);
   const onScroll = () => {
     const y = window.scrollY;
     if (y === 0) setShadow(false);
     else setShadow(true);
   };
+
   useEffect(function onFirstMount() {
     window.addEventListener('scroll', onScroll);
   }, []);
@@ -156,7 +152,7 @@ const Header: FC<IHeader> = ({
                   marginRight: theme.spacing(1),
                   whiteSpace: 'nowrap',
                   color: 'rgb(29,37,69)',
-                  ml: '20px',
+                  ml: theme.spacing(2.5),
                 }}
               >
                 <FormattedMessage id={'sidebar.blog'} />
@@ -172,7 +168,7 @@ const Header: FC<IHeader> = ({
                   marginRight: theme.spacing(1),
                   whiteSpace: 'nowrap',
                   color: 'rgb(29,37,69)',
-                  ml: '20px',
+                  ml: theme.spacing(2.5),
                 }}
               >
                 <FormattedMessage id={'sidebar.contact'} />
@@ -188,7 +184,7 @@ const Header: FC<IHeader> = ({
                   marginRight: theme.spacing(1),
                   whiteSpace: 'nowrap',
                   color: 'rgb(29,37,69)',
-                  ml: '15px',
+                  ml: theme.spacing(2),
                 }}
               >
                 <FormattedMessage id={'sidebar.introduce'} />
@@ -206,9 +202,9 @@ const Header: FC<IHeader> = ({
                 size="small"
                 color="secondary"
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: theme.spacing(1.5),
                   overflow: 'hidden',
-                  padding: '5px',
+                  padding: theme.spacing(0.5),
                   margin: 0,
                   height: 'fit-content',
                   width: 'fit-content !important',

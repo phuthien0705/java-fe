@@ -92,7 +92,6 @@ const CartItems: React.FunctionComponent = () => {
             items={data?.items ?? []}
             setCurrentIndex={setCurrentIndex}
             currentIndex={currentIndex}
-            refetchListCart={refetch}
           />
         )}
       </Grid>

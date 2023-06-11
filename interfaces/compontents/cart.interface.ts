@@ -61,7 +61,6 @@ export interface ISubmitCart {
   currentIndex: number;
   setCurrentIndex: Function;
   items: IEachCartData[];
-  refetchListCart: () => void;
 }
 export interface IPaymentTab {
   data: any;
