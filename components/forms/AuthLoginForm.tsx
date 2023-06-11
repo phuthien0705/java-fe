@@ -98,7 +98,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <Button
             onClick={() => loginGoogle()}
             disableElevation
@@ -115,7 +115,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
             <GoogleIcon sx={{ marginRight: '8px' }} />
             {<FormattedMessage id="page.login.googleContent" />}
           </Button>
-        </Grid> */}
+        </Grid>
         <Grid item xs={12}>
           <Box
             sx={{
