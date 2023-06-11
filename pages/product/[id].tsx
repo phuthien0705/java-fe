@@ -18,13 +18,13 @@ import ProductSlides from '../../components/productdetails/ProductSlides';
 import useGetListBookDetail from '../../hooks/book/useGetListBookDetail';
 import ProductLayout from '../../layout/ProductLayot';
 import LoadingScreen from '../../components/loading/LoadingScreen';
-import useGetRelativeBook from '@/hooks/book/useGetRelativeBook';
 import { FormattedMessage } from 'react-intl';
 import ReviewItem from '@/components/review/ReviewItem';
 import CreateIcon from '@mui/icons-material/Create';
 import authService from '@/services/authService';
 import ReviewModal from '@/components/modals/ReviewModal';
 import useGetListReview from '@/hooks/review/useGetListReview';
+import useGetRecommendationRelatedBook from '@/hooks/recommendation/useGetRecommendationRelatedBook';
 
 const ProductDetail = () => {
   const theme = useTheme();
@@ -37,30 +37,31 @@ const ProductDetail = () => {
   const [hiddenDescription, setHiddenDescription] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
+  const [ratingCounts, setRatingCounts] = useState<any[]>([]);
   const [reviewBook, setReviewBook] = useState({
     id: 0,
     name: '',
     images: '',
   });
   const { data, isLoading } = useGetListBookDetail(id, !!id);
-  const {
-    data: slideData,
-    isLoading: isSlideLoading,
-    isFetching: isSlideFetching,
-  } = useGetRelativeBook(data, !!data);
 
   const {
     data: reviews,
     isLoading: isReviewsLoading,
     refetch,
   } = useGetListReview(data?.id ?? 0, page, 5);
-  const [ratingCounts, setRatingCounts] = useState<any[]>([]);
 
   const numberOfLine = () => {
     if (desRef?.current) return desRef?.current?.clientHeight / 20;
     return 0;
   };
-
+  const {
+    queryReturn: {
+      data: relatedBook,
+      isLoading: isLoadingRelatedBook,
+      isFetching: isFetchingRelatedBook,
+    },
+  } = useGetRecommendationRelatedBook(id);
   useEffect(() => {
     // Đếm số lượng đánh giá cho mỗi số sao
     const countRatings = () => {
@@ -499,9 +500,9 @@ const ProductDetail = () => {
           </Typography>
           <ProductSlides
             detailData={data}
-            slideData={slideData}
-            isSlideLoading={isSlideLoading}
-            isSlideFetching={isSlideFetching}
+            slideData={relatedBook}
+            isSlideLoading={isLoadingRelatedBook}
+            isSlideFetching={isFetchingRelatedBook}
           />
         </Stack>
         <ReviewModal
