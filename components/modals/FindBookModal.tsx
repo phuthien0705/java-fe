@@ -18,6 +18,9 @@ import { MainContext } from '@/pages/_app';
 import { resizeImage } from '@/utils/fileUtils';
 import { useMutation } from 'react-query';
 import { postFindBookByImage } from '@/apis/recommendation.api';
+import { IEachProductData } from '@/interfaces/compontents/product.interface';
+import ProductCardItems from '../cards/products/ProductCardItems';
+import ProductCardItem from '../cards/products/ProductCardItem';
 
 export const FindBookModal = ({
   isOpen,
@@ -34,8 +37,8 @@ export const FindBookModal = ({
     closeModal();
   };
   const { setBackdrop } = useContext(MainContext);
-  const [data, setData] = useState([]);
-  const [value, setValue] = useState<string[]>([]);
+  const [data, setData] = useState<IEachProductData[]>([]);
+  const [value, setValue] = useState<File[]>([]);
   const [isSubmit, setIsSubmit] = useState(false);
   const onSelectImage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -52,7 +55,6 @@ export const FindBookModal = ({
         });
         return;
       }
-      setBackdrop(true);
       for (let key in fileList) {
         // the object is {File: 1, File: 2, length: 2, item: ...} so we need to skip loops where key is not number
         if (isNaN(parseFloat(key))) {
@@ -60,31 +62,28 @@ export const FindBookModal = ({
         }
         promises.push(resizeImage(fileList[key]));
       }
-      Promise.all(promises)
-        .then((result) => {
-          setBackdrop(false);
-          setValues(result);
-        })
-        .catch(() => {
-          setBackdrop(false);
-        });
+      setValue((prev) => [fileList[0]]);
     }
   };
 
   const { mutate, isLoading } = useMutation(
-    (data: any) => postFindBookByImage(data),
+    (data: FormData) => postFindBookByImage(data),
     {
       onSuccess: (res) => {
-        setData(res as any);
+        setData(res);
+        setIsSubmit(true);
       },
       onError: (err) => {
         setData([]);
+        setIsSubmit(true);
       },
     }
   );
 
   const handleFindBook = () => {
-    setIsSubmit(true);
+    let formData = new FormData();
+    formData.append('image', value[0]);
+    mutate(formData);
   };
 
   useEffect(() => {
@@ -94,7 +93,28 @@ export const FindBookModal = ({
 
   return (
     <Dialog onClose={handleClose} open={isOpen} maxWidth={'md'}>
-      <DialogTitle>Nhập hình ảnh sản phẩm</DialogTitle>
+      <DialogTitle>
+        <div className="flex justify-between items-center gap-4">
+          {' '}
+          {isSubmit ? 'Kết quả tìm kiếm' : 'Nhập hình ảnh sản phẩm'}
+          {isSubmit ? (
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => {
+                setIsSubmit(false);
+                setValue([]);
+              }}
+            >
+              Tìm lại
+            </Button>
+          ) : (
+            <Button variant="contained" onClick={handleFindBook}>
+              Tìm kiếm
+            </Button>
+          )}
+        </div>
+      </DialogTitle>
       <DialogContent>
         {!isSubmit && (
           <FormControl fullWidth>
@@ -159,34 +179,33 @@ export const FindBookModal = ({
             <CircularProgress />
           </div>
         )}
-        {isSubmit && !isLoading && data.length > 0 ? (
-          <div>
-            {data.map((item, index: number) => {
-              return <div key={index}>{index}</div>;
-            })}
-          </div>
-        ) : (
+        {isSubmit && !isLoading && data.length > 0 && (
+          <Box sx={{ p: 1 }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                columnGap: '5px',
+                rowGap: '5px',
+              }}
+            >
+              {data.map((product, index: number) => {
+                return (
+                  <ProductCardItem
+                    key={index}
+                    product={product}
+                    index={index}
+                  />
+                );
+              })}
+            </div>
+          </Box>
+        )}
+        {isSubmit && !isLoading && data.length === 0 && (
           <div className="flex justify-center items-center p-2">
             Không tìm thấy sách
           </div>
         )}
-        <div className="flex justify-center mt-4">
-          {isSubmit ? (
-            <Button
-              variant="contained"
-              onClick={() => {
-                setIsSubmit(false);
-                setValue([]);
-              }}
-            >
-              Tìm lại
-            </Button>
-          ) : (
-            <Button variant="contained" onClick={handleFindBook}>
-              Tìm kiếm
-            </Button>
-          )}
-        </div>
       </DialogContent>
     </Dialog>
   );

@@ -9,6 +9,6 @@ export const getRecommendationRelatedBook = (id: number) => {
   return httpRequest.get<IEachProductData[]>(`/recommendations/books/${id}`);
 };
 
-export const postFindBookByImage = (data: any) => {
-  return httpRequest.get<IEachProductData[]>(`/recommendations/image`, data);
+export const postFindBookByImage = (data: FormData) => {
+  return httpRequest.post<IEachProductData[]>(`/recommendations/image`, data);
 };

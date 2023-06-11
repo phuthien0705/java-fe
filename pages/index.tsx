@@ -31,8 +31,6 @@ const Home = () => {
     },
   } = useGetRecommendationHome();
 
-  console.log(recommendationData);
-
   const renderGenres = () => {
     if (!isGenreLoading) {
       return (

@@ -15,7 +15,7 @@ const CustomSwipe = styled(Swiper)({
   '.swiper-pagination-bullet': { margin: '0 2px !important' },
 });
 
-export const ListImage = ({ listImage }: { listImage: string[] }) => {
+export const ListImage = ({ listImage }: { listImage: (string | File)[] }) => {
   return (
     <div>
       {listImage.length > 0 && (
@@ -32,22 +32,28 @@ export const ListImage = ({ listImage }: { listImage: string[] }) => {
             navigation={true}
             // onSwiper={(swiper) => setSwiper(swiper)}
           >
-            {(listImage as string[]).map((image: string, index: number) => (
-              <SwiperSlide
-                key={`slider-image-${index}`}
-                className="not-custom rounded overflow-hidden mb-6 px-1 flex justify-center items-center"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={image}
-                  alt="post image"
-                  className="object-contain mx-auto my-auto"
-                  style={{
-                    maxHeight: '288px',
-                  }}
-                />
-              </SwiperSlide>
-            ))}
+            {listImage.map((image: string | File, index: number) => {
+              return (
+                <SwiperSlide
+                  key={`slider-image-${index}`}
+                  className="not-custom rounded overflow-hidden mb-6 px-1 flex justify-center items-center"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={
+                      typeof image === 'string'
+                        ? image
+                        : URL.createObjectURL(image as any)
+                    }
+                    alt="post image"
+                    className="object-contain mx-auto my-auto"
+                    style={{
+                      maxHeight: '288px',
+                    }}
+                  />
+                </SwiperSlide>
+              );
+            })}
           </CustomSwipe>
         </>
       )}
