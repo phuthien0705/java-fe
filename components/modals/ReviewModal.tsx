@@ -12,14 +12,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import Rating from '@mui/material/Rating';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useMutation } from 'react-query';
-import { deleteAddress, setDefaultAddress } from '@/apis/address.api';
 import { useDispatch } from 'react-redux';
 import { toggleSnackbar } from '@/store/snackbarReducer';
-import LoadingButton from '@mui/lab/LoadingButton';
 import AddressForm from '../forms/AddressForm';
-import {
-  IReviewModal,
-} from '@/interfaces/compontents/modal.interface';
+import { IReviewModal } from '@/interfaces/compontents/modal.interface';
 import { useToast } from '@/hooks/useToast';
 import { ImageOrderStyle } from '../orders/ImageOrderStyle';
 import { addReview } from '@/apis/review.api';
@@ -28,6 +24,7 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
   open,
   handleClose,
   book,
+  refetchReviews,
 }) => {
   const dispatch = useDispatch();
   const toast = useToast(dispatch, toggleSnackbar);
@@ -35,7 +32,6 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState<string>('');
 
-  const [value, setValue] = useState<string | null>(null);
   const [editMode, setEditMode] = useState<boolean | { data: any }>(false);
 
   const handleRatingChange = (
@@ -57,6 +53,7 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
           type: 'success',
           message: `Thêm đánh giá sản phẩm thành công`,
         });
+        refetchReviews();
         handleClose();
       },
       onError: () => {
