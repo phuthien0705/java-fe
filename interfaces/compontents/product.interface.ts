@@ -44,4 +44,6 @@ export interface IEachProductData {
     phone: null | string;
   };
   totalPages: number;
+  rating: number;
+  ratingCount: number;
 }
