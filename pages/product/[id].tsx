@@ -38,7 +38,7 @@ const ProductDetail = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
   const [reviewBook, setReviewBook] = useState({
-    id: '',
+    id: 0,
     name: '',
     images: '',
   });
@@ -67,7 +67,7 @@ const ProductDetail = () => {
       const counts = Array(5).fill(0); // Khởi tạo mảng đếm với giá trị ban đầu 0
 
       if (reviews) {
-        reviews.datas.forEach((review) => {
+        reviews.forEach((review) => {
           // Tăng số lượng đánh giá cho mỗi số sao tương ứng
           counts[review.rating - 1]++;
         });
@@ -307,7 +307,7 @@ const ProductDetail = () => {
                         fontSize={50}
                         lineHeight={0.8}
                       >
-                        {/* {data?.rating ?? 0} */}
+                        {data?.rating ?? 0}
                       </Typography>
                       <Typography
                         variant="body1"
@@ -318,13 +318,13 @@ const ProductDetail = () => {
                         /{5}
                       </Typography>
                     </Box>
-                    {/* <Rating
+                    <Rating
                       name="product-rating"
                       value={data?.rating ?? 0}
                       readOnly
-                    /> */}
+                    />
                     <Typography variant="body2">
-                      ({reviews && reviews.totalResults} đánh giá)
+                      ({reviews && reviews.length} đánh giá)
                     </Typography>
                   </Box>
 
@@ -360,8 +360,7 @@ const ProductDetail = () => {
                           <Box
                             sx={{
                               width: `${
-                                reviews?.datas &&
-                                (count / reviews?.datas?.length) * 100
+                                reviews && (count / reviews?.length) * 100
                               }%`,
                               height: '100%',
                               bgcolor: 'primary.main',
@@ -374,8 +373,8 @@ const ProductDetail = () => {
                           align="center"
                           sx={{ ml: theme.spacing(1) }}
                         >
-                          {reviews?.datas &&
-                            Math.round((count / reviews?.datas?.length) * 100)}
+                          {reviews &&
+                            Math.round((count / reviews?.length) * 100)}
                           %
                         </Typography>
                       </Box>
@@ -398,11 +397,11 @@ const ProductDetail = () => {
                         sx={{ width: '300px', borderWidth: '1px' }}
                         onClick={() => {
                           setOpenReviewModal(true);
-                          // setReviewBook({
-                          //   id: data?.id ?? '',
-                          //   name: data?.name ?? '',
-                          //   images: data?.images[0].url ?? '',
-                          // });
+                          setReviewBook({
+                            id: data?.id ?? 0,
+                            name: data?.name ?? '',
+                            images: data?.images[0].url ?? '',
+                          });
                         }}
                       >
                         Viết đánh giá
@@ -445,15 +444,17 @@ const ProductDetail = () => {
                   px: { xs: theme.spacing(1), md: theme.spacing(1) },
                 }}
               >
-                {reviews?.datas && reviews.datas.length > 0 ? (
-                  reviews.datas.map((review: any, index: any) => (
-                    <ReviewItem
-                      key={index}
-                      rating={review?.rating}
-                      comment={review?.comment}
-                      user={review?.user?.name}
-                    />
-                  ))
+                {reviews && reviews.length > 0 ? (
+                  reviews
+                    .slice(page - 1, page + 4)
+                    .map((review, index) => (
+                      <ReviewItem
+                        key={index}
+                        rating={review?.rating}
+                        comment={review?.content}
+                        user={review?.user?.name}
+                      />
+                    ))
                 ) : (
                   <Typography variant="body1">
                     Không có bài đánh giá nào
@@ -473,7 +474,7 @@ const ProductDetail = () => {
                   variant="outlined"
                   shape="rounded"
                   color="primary"
-                  count={reviews?.totalPages ?? 0}
+                  count={reviews ? Math.round(reviews?.length / 5) : 0}
                   page={page}
                   onChange={(event, value) => setPage(value)}
                 />

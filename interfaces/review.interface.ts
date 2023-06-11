@@ -4,10 +4,19 @@ export interface IReviewItem {
   user: string;
 }
 export interface IEachReviewData {
-  user: null | string;
-  bookId: string;
+  createDate: null | string;
+  updateDate: null | string;
+  createBy: null | string;
+  updateBy: null | string;
+  id: number;
+  content: string;
   rating: number;
-  comment: string;
-  createAt: string;
-  id: string;
+  bookId: number;
+  user: {
+    id: number;
+    username: string;
+    name: string;
+    email: string;
+    roles: Array<{ id: number; name: string }>;
+  };
 }

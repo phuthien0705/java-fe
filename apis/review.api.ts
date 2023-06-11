@@ -1,8 +1,11 @@
-import { IPaginationResponse } from '@/interfaces/general.interface';
 import { IEachReviewData } from '@/interfaces/review.interface';
 import httpRequest from '@/services/httpRequest';
 
-export const addReview = async (data: any) => {
+export const addReview = async (data: {
+  bookId: number;
+  content: string;
+  rating: number;
+}) => {
   return httpRequest.post('/reviews', data);
 };
 export const getBookReviews = async (
@@ -10,7 +13,7 @@ export const getBookReviews = async (
   page: number,
   limit: number
 ) => {
-  return httpRequest.get<IPaginationResponse<IEachReviewData>>(
+  return httpRequest.get<IEachReviewData[]>(
     `/reviews/books/${bookId}?limit=${limit}&page=${page}`
   );
 };

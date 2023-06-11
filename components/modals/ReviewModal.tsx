@@ -46,7 +46,8 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
   };
 
   const { mutate: createReviewFunc, isLoading } = useMutation(
-    (data: any) => addReview(data),
+    (data: { bookId: number; content: string; rating: number }) =>
+      addReview(data),
     {
       onSuccess: () => {
         toast({
@@ -67,9 +68,9 @@ const ReviewModal: React.FunctionComponent<IReviewModal> = ({
 
   const handleAddReview = () => {
     const reviewData = {
-      rating: rating,
-      comment: comment,
-      bookId: book.id,
+      rating: rating ?? 0,
+      content: comment,
+      bookId: book.id as number,
     };
 
     createReviewFunc(reviewData);
