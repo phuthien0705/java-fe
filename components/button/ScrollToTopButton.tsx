@@ -31,7 +31,7 @@ const ScrollToTopButton: React.FunctionComponent = () => {
     >
       <Fab
         onClick={scrollToTop}
-        style={{
+        sx={{
           display: visible ? 'flex' : 'none',
           position: 'fixed',
           bottom: 10,
