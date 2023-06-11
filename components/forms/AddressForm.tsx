@@ -19,7 +19,7 @@ import useGetListProvinces from '@/hooks/client/useGetListProvinces';
 import Grid from '@mui/material/Grid';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
-import { getListProvinces, getListProvinceCities } from '@/apis/city.api';
+import { getListProvinceCities } from '@/apis/city.api';
 import { addAddress, updateAddress } from '@/apis/address.api';
 import { useToast } from '@/hooks/useToast';
 

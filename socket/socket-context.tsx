@@ -123,18 +123,6 @@ const SocketsProvider = ({ children }: { children: ReactNode }) => {
         }
       });
 
-      socket?.on('receive-follow', (...res) => {
-        console.log('$socket_log receive', res);
-
-        setHaveNoti(true);
-        localStorage.setItem('haveNoti', 'true');
-      });
-      socket?.on('unicast-accept-follow', (res) => {
-        console.log('$socket_log have accept', res);
-
-        setHaveNoti(true);
-        localStorage.setItem('haveNoti', 'true');
-      });
       socket?.on('notification', (res) => {
         console.log('$socket_log have accept', res);
 

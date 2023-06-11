@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
 import {
@@ -19,14 +19,12 @@ import {
   IconSettings,
 } from '@tabler/icons';
 import authService from '../../../services/authService';
-import checkIsAdminOrManager from '../../../common/checkIsAdminOrManager';
 import { CART_CLIENT } from '@/constants/queryKeyName';
 import { FormattedMessage } from 'react-intl';
 
 const ProfileSection: React.FunctionComponent = () => {
   const theme = useTheme();
   const router = useRouter();
-  const [userInfo, setUserInfo] = useState<any>({ name: '', roles: ['user'] });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const queryClient = useQueryClient();
@@ -54,10 +52,6 @@ const ProfileSection: React.FunctionComponent = () => {
       router.push(route);
     }
   };
-
-  useEffect(() => {
-    setUserInfo(authService.getUser());
-  }, []);
 
   return (
     <div>
@@ -107,11 +101,11 @@ const ProfileSection: React.FunctionComponent = () => {
               }
             />
           </ListItemButton>
-        ) : checkIsAdminOrManager(userInfo?.roles) ? (
+        ) : authService.isAdmin() ? (
           <MenuList sx={{ padding: 0 }}>
             <ListItemButton
               selected={router.pathname.includes('/admin')}
-              onClick={() => handleListItemClick('/admin/statistic')}
+              onClick={() => handleListItemClick('/admin/post')}
             >
               <ListItemIcon>
                 <IconAdjustments stroke={1.5} size="1.3rem" />

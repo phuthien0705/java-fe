@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { FormattedMessage } from 'react-intl';
 import LogoSection from '../LogoSection';
 import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
@@ -19,7 +20,7 @@ import GenreSection from './GenreSection';
 import { scrollToTop } from '@/utils/scrollToTop';
 import useGetListCart from '@/hooks/cart/useGetListCart';
 import NotificationSection from './NotificationSection';
-import { FormattedMessage } from 'react-intl';
+import useGetNotifications from '@/hooks/notification/useGetNotifications';
 
 const Header: FC<IHeader> = ({
   handleLeftDrawerToggle,
@@ -36,12 +37,17 @@ const Header: FC<IHeader> = ({
   const { data, isLoading, isFetching, refetch } = useGetListCart();
   const matches = useMediaQuery('(min-width:900px)');
   const theme = useTheme();
+  const [page, setPage] = useState<number>(1);
+
+  const {
+    queryReturn: { data: notificationData, isLoading: isLoadingNotification },
+  } = useGetNotifications(page, 5);
+  console.log(notificationData);
   const onScroll = () => {
     const y = window.scrollY;
     if (y === 0) setShadow(false);
     else setShadow(true);
   };
-
   useEffect(function onFirstMount() {
     window.addEventListener('scroll', onScroll);
   }, []);

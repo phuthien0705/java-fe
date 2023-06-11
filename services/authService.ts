@@ -28,13 +28,25 @@ class AuthService {
 
   isAdmin = () => {
     const user: any = this.getUser();
-    if (user?.roles?.includes('admin')) return true;
+    if (
+      user?.roles &&
+      user.roles?.find(
+        (i: { id: number; name: string }) => i?.name === 'ROLE_ADMIN'
+      )
+    )
+      return true;
     return false;
   };
 
   isManger = () => {
     const user: any = this.getUser();
-    if (user?.roles?.includes('manager')) return true;
+    if (
+      user?.roles &&
+      user.roles?.find(
+        (i: { id: number; name: string }) => i?.name === 'ROLE_MANAGER'
+      )
+    )
+      return true;
     return false;
   };
 }

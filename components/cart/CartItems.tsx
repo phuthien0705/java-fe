@@ -73,7 +73,7 @@ const CartItems: React.FunctionComponent = () => {
         {currentIndex === 1 && (
           <PaymentTab
             data={data?.items ?? []}
-            listAddress={listAddress ?? []}
+            listAddress={listAddress?.datas ?? []}
             refetchAddress={refetchAddress}
             isLoading={isLoadingListAddress}
           />

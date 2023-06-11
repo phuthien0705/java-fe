@@ -7,7 +7,6 @@ const useGetListCart = () => {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
-  console.log('test', getListQuery);
   return getListQuery;
 };
 

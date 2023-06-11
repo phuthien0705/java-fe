@@ -58,7 +58,7 @@ const PostManagement = () => {
   }, []);
 
   const columns = [
-    { field: '_id', headerName: 'ID', description: 'ID bài viết', width: 50 },
+    { field: 'id', headerName: 'ID', description: 'ID bài viết', width: 50 },
     {
       field: 'title',
       headerName: 'Tên bài viết',
@@ -89,8 +89,8 @@ const PostManagement = () => {
       sortable: false,
       renderCell: (params: any) => (
         <MenuActionAdmin
-          id={params?.row?._id}
-          deleteCallback={() => mutate(params?.row?._id)}
+          id={params?.row?.id}
+          deleteCallback={() => mutate(params?.row?.id)}
           editCallback={() => toggleModalEdit(params?.row)}
         />
       ),

@@ -1,4 +1,4 @@
-import { SyntheticEvent, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Grid,
   Typography,
@@ -8,7 +8,6 @@ import {
   FormControlLabel,
   FormControl,
   RadioGroup,
-  FormLabel,
   Radio,
 } from '@mui/material';
 import { IconBrandPaypal } from '@tabler/icons';
@@ -40,7 +39,7 @@ const PaymentTab: React.FunctionComponent<IPaymentTab> = ({
   };
   const renderDefaultAddress = () => {
     const defaultAddress = (listAddress || []).find(
-      (item: IEachAddressOfUserData) => item?.isDefault === true
+      (item: IEachAddressOfUserData) => item.default === true
     );
     if (!defaultAddress)
       return (

@@ -23,3 +23,4 @@ export const POST = 'post';
 export const SHIPPING_COST = 'shipping-cost';
 export const POST_DETAIL = 'post-detail';
 export const REALTED_BOOK = 'realted-book';
+export const NOTIFICATION = 'notification';

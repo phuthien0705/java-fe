@@ -2,7 +2,7 @@ export interface IEachPostData {
   author: {
     deletedAt: string | null;
     email: string;
-    id: string;
+    id: number;
     isActive: boolean;
     isDeleted: boolean;
     isEmailVerified: boolean;
@@ -10,9 +10,10 @@ export interface IEachPostData {
     roles: Array<string>;
   };
   content: string;
-  _id: string;
-  images: Array<{ key: string; url: string; _id: string }>;
+  id: number;
   title: string;
-  createdAt: string;
-  updatedAt: string;
+  updateBy: string;
+  updateDate: string;
+  createBy: string;
+  createDate: string;
 }

@@ -3,7 +3,6 @@ import { Stack, Button, Container, Box, Typography } from '@mui/material';
 import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { makeOrder } from '@/apis/checkout.api';
-
 import { useRouter } from 'next/router';
 import {
   IEachCartData,
@@ -14,7 +13,6 @@ import { moneyFormat } from '@/utils/moneyFormat';
 import useGetShippingCost from '@/hooks/address/useGetShippingCost';
 import { CartItemContext } from './CartItems';
 import { EProcessPayment } from '@/constants/processPayment';
-import { METHODS } from 'http';
 
 const payMethodMaping = (method: string): { EMethod: EProcessPayment } => {
   switch (method) {

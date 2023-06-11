@@ -45,7 +45,7 @@ export default function blogs() {
   const theme = useTheme();
   const router = useRouter();
 
-  function handleRedirectToBlogDetail(bid: string) {
+  function handleRedirectToBlogDetail(bid: number) {
     router.push({
       pathname: EPathName.BLOG_DETAIL,
       query: {
@@ -66,7 +66,7 @@ export default function blogs() {
             {data?.datas &&
               data.datas.map((item) => {
                 return (
-                  <Stack key={item._id} spacing={theme.spacing(1)}>
+                  <Stack key={item.id} spacing={theme.spacing(1)}>
                     <Typography
                       sx={{
                         fontWeight: 700,
@@ -76,7 +76,7 @@ export default function blogs() {
                         '&:hover': { textDecoration: 'underline' },
                       }}
                       className="line-clamp-2"
-                      onClick={() => handleRedirectToBlogDetail(item._id)}
+                      onClick={() => handleRedirectToBlogDetail(item.id)}
                     >
                       {item.title}
                     </Typography>
@@ -98,7 +98,7 @@ export default function blogs() {
                       >
                         <AccessTimeIcon fontSize={'small'} />
                         <Typography fontSize={17}>
-                          {newTimeStamp(item.createdAt)}
+                          {newTimeStamp(item.createDate)}
                         </Typography>
                       </Stack>
                     </Stack>

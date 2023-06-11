@@ -65,7 +65,7 @@
   "cart.serverFailed": "Máy chủ đang bận xin vui lòng thử lại sau",
   "cancel": "Hủy",
   "confirm": "Xác nhận",
-  "cart.deteleItem": "Xóa sản phẩm",
+  "cart.deteleContent": "Xóa sản phẩm",
   "cart.deleteAllItem": "Xóa tất cả sản phẩm",
   "cart.deleteItemQuestion": "Bạn có muốn xóa sản phẩm đang chọn?",
   "cart.deleteAllItemQuestion": "Bạn có muốn xóa tất cả sản phẩm đang chọn?"

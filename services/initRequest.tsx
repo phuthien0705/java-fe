@@ -21,24 +21,24 @@ const requestConfig = {
 
 export const axiosInstance = axios.create(requestConfig);
 
-async function middlewareRefresh(error: AxiosError) {
-  try {
-    const { data } = await postGetRefreshToken();
-    setCredentialsToCookies({
-      accessToken: data.access.token,
-      refreshToken: data.refresh.token,
-    });
+// async function middlewareRefresh(error: AxiosError) {
+//   try {
+//     const { data } = await postGetRefreshToken();
+//     setCredentialsToCookies({
+//       accessToken: data.access.token,
+//       refreshToken: data.refresh.token,
+//     });
 
-    if (error?.config?.headers)
-      error.config.headers.Authorization = `Bearer ${data.access.token}`;
-  } catch (error) {
-    clearCookiesAndLocalStorage();
-    window.location.replace('/login');
-    return;
-  }
+//     if (error?.config?.headers)
+//       error.config.headers.Authorization = `Bearer ${data.access.token}`;
+//   } catch (error) {
+//     // clearCookiesAndLocalStorage();
+//     // window.location.replace('/login');
+//     return;
+//   }
 
-  error?.config && axios(error.config);
-}
+//   error?.config && axios(error.config);
+// }
 
 export default function initRequest() {
   axiosInstance.interceptors.request.use(
@@ -62,7 +62,7 @@ export default function initRequest() {
     (error) => {
       switch (error.response?.status) {
         case 401: {
-          middlewareRefresh(error);
+          // middlewareRefresh(error);
           break;
         }
         case 400: {

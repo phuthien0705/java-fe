@@ -30,7 +30,6 @@ import { useDispatch } from 'react-redux';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { login, postLoginGoogle, reSendVerifyEmail } from '../../apis/auth.api';
 import authService from '../../services/authService';
-import checkIsAdminOrManager from '../../common/checkIsAdminOrManager';
 import config from '@/config';
 import { useToast } from '@/hooks/useToast';
 import { toggleSnackbar } from '@/store/snackbarReducer';
@@ -79,7 +78,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
         roles: result.user.roles,
         email: result.user.email,
       });
-      if (!checkIsAdminOrManager(result?.user?.roles)) {
+      if (!authService.isAdmin()) {
         router.push('/');
       } else {
         router.push('/admin/post');
@@ -183,6 +182,7 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
           try {
             const req = { identity: values.email, password: values.password };
             const result = await login(req);
+            console.log(result);
             authService.login({
               accessToken: result.accessToken,
               refreshToken: '',
@@ -191,20 +191,10 @@ const AuthLoginForm = ({ ...others }: { [others: string]: unknown }) => {
               roles: result.user.roles,
               email: result.user.email,
             });
-            // if (!result.user.isActive) {
-            //   await reSendVerifyEmail();
-            //   setShowAlert({
-            //     type: 'success',
-            //     content: localeContent.unActiveAccount,
-            //   });
-            //   // authService.logOut();
-            //   setStatus({ success: true });
-            //   setSubmitting(false);
-            //   return;
-            // }
+
             setStatus({ success: true });
             setSubmitting(false);
-            if (!checkIsAdminOrManager(result?.user?.roles)) {
+            if (!authService.isAdmin()) {
               router.push('/');
             } else {
               router.push('/admin/post');

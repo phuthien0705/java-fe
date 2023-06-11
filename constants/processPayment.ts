@@ -1,6 +1,6 @@
 export enum EProcessPayment {
-  CREDIT_CARD = 'credit_card',
-  ONLINE_BANKING = 'online_banking',
-  CASH_ON_DELIVERY = 'cash_on_delivery',
-  PAYPAL = 'paypal',
+  CREDIT_CARD = 'CREDIT_CARD',
+  ONLINE_BANKING = 'ONLINE_BANKING',
+  CASH_ON_DELIVERY = 'CASH_ON_DELIVERY',
+  PAYPAL = 'PAYPAL',
 }

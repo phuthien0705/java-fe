@@ -41,7 +41,7 @@ const ItemTab: React.FunctionComponent<{
   const updateFailedContent = intl.formatMessage({ id: 'cart.updateFailed' });
   const cancelContent = intl.formatMessage({ id: 'cancel' });
   const confirmContent = intl.formatMessage({ id: 'confirm' });
-  const deleteItemContent = intl.formatMessage({ id: 'cart.deleteItem' });
+  const deleteItemContent = intl.formatMessage({ id: 'cart.deteleContent' });
   const deleteAllItemContent = intl.formatMessage({ id: 'cart.deleteAllItem' });
   const deleteAllItemQuestionContent = intl.formatMessage({
     id: 'cart.deleteAllItemQuestion',

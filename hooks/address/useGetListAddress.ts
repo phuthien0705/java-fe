@@ -3,10 +3,7 @@ import { LIST_ADDRESS } from '@/constants/queryKeyName';
 import { useQuery } from 'react-query';
 
 const useGetListAddress = () => {
-  const getListQuery = useQuery(LIST_ADDRESS, getListAddress, {
-    cacheTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const getListQuery = useQuery(LIST_ADDRESS, getListAddress);
   return getListQuery;
 };
 

@@ -39,11 +39,11 @@ const SecurityTab: React.FunctionComponent = () => {
         initialValues={initValue}
         validationSchema={Yup.object().shape({
           old_password: Yup.string()
-            .min(8, 'Mật khẩu phải ít nhất 8 ký tự')
+            .min(6, 'Mật khẩu phải ít nhất 6 ký tự')
             .max(255, 'Mật khẩu tối đa 255 ký tự')
             .required('Mật khẩu là bắt buộc'),
           new_password: Yup.string()
-            .min(8, 'Mật khẩu phải ít nhất 8 ký tự')
+            .min(6, 'Mật khẩu phải ít nhất 6 ký tự')
             .max(255, 'Mật khẩu tối đa 255 ký tự')
             .required('Mật khẩu là bắt buộc'),
         })}

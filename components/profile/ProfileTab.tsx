@@ -60,10 +60,6 @@ const ProfileTab: React.FunctionComponent = () => {
   );
 
   const handleSave = () => {
-    // if (!values?.phone?.match(/\d/g) && values?.phone?.length !== 10) {
-    //   toast({ type: 'info', message: 'Số điện thoại phải đúng định dạng' });
-    //   return;
-    // }
     const req = createFormDataRequest(
       values?.avatar
         ? {
@@ -174,7 +170,7 @@ const ProfileTab: React.FunctionComponent = () => {
               onChange={handleChange}
             /> */}
             <TextField
-              name="bio"
+              name="biography"
               label="Mô tả bản thân"
               value={values?.biography}
               onChange={handleChange}

@@ -32,23 +32,22 @@ const AddressModal: React.FunctionComponent<IAddressModal> = ({
   refetchAddress,
 }) => {
   const defaultAddress = (listAddress || []).find(
-    (item: any) => item?.isDefault === true
+    (item) => item.default === true
   );
   const dispatch = useDispatch();
   const toast = useToast(dispatch, toggleSnackbar);
 
-  const [value, setValue] = useState<string | null>(null);
+  const [value, setValue] = useState<number | null>(null);
   const [editMode, setEditMode] = useState<boolean | { data: any }>(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [deletingAddressId, setDeletingAddressId] = useState<string | null>(
+  const [deletingAddressId, setDeletingAddressId] = useState<number | null>(
     null
   );
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event?.target as any).value);
   };
-
   const { mutate: changeDefaultAddressFunc, isLoading } = useMutation(
-    (id: string) => setDefaultAddress(id, true),
+    (id: number) => setDefaultAddress(id, true),
     {
       onSuccess: () => {
         refetchAddress();
@@ -180,21 +179,20 @@ const AddressModal: React.FunctionComponent<IAddressModal> = ({
     }
     return null;
   };
-
   const handleSubmit = () => {
     const newDefaultAddress = listAddress?.find(
-      (item: IEachAddressOfUserData) => item?.id === value
+      (item: IEachAddressOfUserData) =>
+        item?.id === Number.parseInt(value as unknown as string)
     );
     if (defaultAddress?.id === newDefaultAddress?.id) {
       handleClose();
     } else {
-      changeDefaultAddressFunc(newDefaultAddress?.id as string);
+      changeDefaultAddressFunc(newDefaultAddress?.id ?? 0);
     }
-    // close after 500ms
   };
   useEffect(() => {
     const defaultAddress = (listAddress || []).find(
-      (item: IEachAddressOfUserData) => item?.isDefault === true
+      (item: IEachAddressOfUserData) => item?.default === true
     );
     if (defaultAddress) {
       setValue(defaultAddress?.id ?? null);
