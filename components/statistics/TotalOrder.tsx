@@ -1,12 +1,16 @@
-import { Box, Typography } from '@mui/material';
 import { ITotalOrder } from '@/interfaces/compontents/statistic.interface';
+import { Box, Skeleton, Typography, useTheme } from '@mui/material';
 
-const TotalOrder: React.FunctionComponent<ITotalOrder> = ({ data }) => {
+const TotalOrder: React.FunctionComponent<ITotalOrder> = ({
+  data,
+  isLoading,
+}) => {
+  const theme = useTheme();
   const calcTotalEarning = () => {
-    if (data?.length === 0) return 0;
+    if (data.length === 0) return 0;
     let total = 0;
-    (data || [])?.forEach((item: any) => {
-      total += item?.quantity;
+    (data || [])?.forEach((item) => {
+      total += item.totalOrder;
     });
     return total;
   };
@@ -15,19 +19,23 @@ const TotalOrder: React.FunctionComponent<ITotalOrder> = ({ data }) => {
       className="shadow"
       sx={{
         backgroundColor: '#fff',
-        p: 2,
-        borderRadius: '8px',
+        borderRadius: theme.spacing(1),
         display: 'flex',
         flexDirection: 'column',
-        rowGap: '10px',
       }}
     >
-      <Typography sx={{ fontWeight: 600, color: '#000' }}>
-        {calcTotalEarning()} quyển
-      </Typography>
-      <Typography sx={{ fontWeight: 600, color: 'rgba(0,0,0,0.5)' }}>
-        Số sách bán ra
-      </Typography>
+      {isLoading ? (
+        <Skeleton variant="rectangular" width={'100%'} height={100} />
+      ) : (
+        <Box sx={{ padding: theme.spacing(2) }}>
+          <Typography sx={{ fontWeight: 600, color: 'rgba(0,0,0,0.5)' }}>
+            Đơn hàng
+          </Typography>
+          <Typography sx={{ fontWeight: 600, color: '#000' }}>
+            {calcTotalEarning()} đơn hàng
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

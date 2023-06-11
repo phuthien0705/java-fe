@@ -1,12 +1,10 @@
-export interface ITotalGrowth {
-  data: any;
+import { IEachStatisticWithProfitData } from '../statistic.interface';
+interface IStaisticProps {
+  data: IEachStatisticWithProfitData[];
+  isLoading: boolean;
 }
-export interface ITotalQuantity {
-  data: any;
-}
-export interface ITotalEarning {
-  data: any;
-}
-export interface ITotalOrder {
-  data: any;
-}
+export type ITotalGrowth = IStaisticProps;
+export type ITotalQuantity = IStaisticProps;
+export type ITotalEarning = IStaisticProps;
+export type ITotalSold = IStaisticProps;
+export type ITotalOrder = IStaisticProps;

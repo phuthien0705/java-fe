@@ -1,17 +1,16 @@
+import { ITotalSold } from '@/interfaces/compontents/statistic.interface';
 import { Box, Skeleton, Typography, useTheme } from '@mui/material';
-import { ITotalEarning } from '@/interfaces/compontents/statistic.interface';
-import { moneyFormat } from '@/utils/moneyFormat';
 
-const TotalEarning: React.FunctionComponent<ITotalEarning> = ({
+const TotalSold: React.FunctionComponent<ITotalSold> = ({
   data,
   isLoading,
 }) => {
   const theme = useTheme();
   const calcTotalEarning = () => {
-    if (data?.length === 0) return 0;
+    if (data.length === 0) return 0;
     let total = 0;
-    data.forEach((item) => {
-      total += item.totalRevenue;
+    (data || [])?.forEach((item) => {
+      total += item.totalSold;
     });
     return total;
   };
@@ -30,15 +29,14 @@ const TotalEarning: React.FunctionComponent<ITotalEarning> = ({
       ) : (
         <Box sx={{ padding: theme.spacing(2) }}>
           <Typography sx={{ fontWeight: 600, color: 'rgba(0,0,0,0.5)' }}>
-            Số tiền thu được
-          </Typography>{' '}
+            Số sách bán ra
+          </Typography>
           <Typography sx={{ fontWeight: 600, color: '#000' }}>
-            {moneyFormat(calcTotalEarning())}
+            {calcTotalEarning()} quyển
           </Typography>
         </Box>
       )}
     </Box>
   );
 };
-
-export default TotalEarning;
+export default TotalSold;

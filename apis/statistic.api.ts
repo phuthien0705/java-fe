@@ -1,12 +1,15 @@
 import { partStatisticTime } from '@/utils/parseTime';
 import httpRequest from '../services/httpRequest';
+import { IEachStatisticData } from '@/interfaces/statistic.interface';
 
 export const getStatistic = async ({
-  startDate = partStatisticTime(new Date().toISOString()),
-  endDate = partStatisticTime(new Date().toISOString()),
+  fromDate = partStatisticTime(new Date().toISOString()),
+  toDate = partStatisticTime(new Date().toISOString()),
 }: {
-  startDate: string;
-  endDate: string;
+  fromDate: string;
+  toDate: string;
 }) => {
-  return httpRequest.get(`/admin/statistics?date=${startDate},${endDate}`);
+  return httpRequest.get<IEachStatisticData[]>(
+    `/statistics?fromDate=${fromDate}&toDate=${toDate}`
+  );
 };

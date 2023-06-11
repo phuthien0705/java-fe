@@ -1,29 +1,45 @@
-import { ITotalGrowth } from '@/interfaces/compontents/statistic.interface';
-import { Box, Typography } from '@mui/material';
+import { Box, Skeleton, Typography, styled, useTheme } from '@mui/material';
 import dynamic from 'next/dynamic';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { ITotalGrowth } from '@/interfaces/compontents/statistic.interface';
+import convertToISO from '@/utils/convertToISO';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
-const TotalGrowth: React.FunctionComponent<ITotalGrowth> = ({ data }) => {
+const GrowthChart = styled(Chart)(`
+  max-width: 100%;
+  * {
+    max-width: 100%;
+  }
+`);
+const TotalGrowth: React.FunctionComponent<ITotalGrowth> = ({
+  data,
+  isLoading,
+}) => {
   const matches = useMediaQuery('(min-width:900px)');
-  const create_xaxis_data: any = () => {
-    if (!data) return [];
-    let xaxis_data: any[] = [];
-    data?.forEach((item: any) => {
-      xaxis_data.push(item?.order_date);
+  const theme = useTheme();
+  const create_xaxis_data = () => {
+    if (data.length === 0) return [];
+    let xaxis_data: string[] = [];
+    data.forEach((item) => {
+      xaxis_data.push(convertToISO(item.monthYear));
     });
     return xaxis_data;
   };
-  const create_series: any = () => {
+  const create_series = () => {
     if (!data) return [];
 
-    let series_data_earning: any = { name: 'Số tiền thu được', data: [] };
-    let series_data_profit: any = { name: 'Lợi nhuận', data: [] };
+    let series_data_earning: { name: string; data: number[] } = {
+      name: 'Số tiền thu được',
+      data: [],
+    };
+    let series_data_profit: { name: string; data: number[] } = {
+      name: 'Lợi nhuận',
+      data: [],
+    };
 
-    data?.forEach((item: any) => {
-      series_data_earning.data.push(item?.sales);
-      series_data_profit.data.push(item?.profit);
+    data.forEach((item) => {
+      series_data_earning.data.push(item.totalRevenue);
+      series_data_profit.data.push(item.profit);
     });
 
     return [series_data_profit, series_data_earning];
@@ -49,24 +65,27 @@ const TotalGrowth: React.FunctionComponent<ITotalGrowth> = ({ data }) => {
       sx={{
         backgroundColor: '#fff',
         width: '100%',
-        p: 2,
         borderRadius: '8px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
       }}
     >
-      <Box>
-        <Typography sx={{ fontWeight: 600, color: '#000' }}>
-          Doanh thu
-        </Typography>
-      </Box>
-      <Chart
-        options={chartInfo.options as any}
-        series={chartInfo.series}
-        type="area"
-        width={matches ? 900 : 600}
-      />
+      {isLoading ? (
+        <Skeleton variant="rectangular" width={'100%'} height={100} />
+      ) : (
+        <Box sx={{ padding: theme.spacing(3) }}>
+          <Typography sx={{ fontWeight: 600, color: '#000' }} mb={2}>
+            Doanh thu
+          </Typography>
+          <GrowthChart
+            options={chartInfo.options as any}
+            series={chartInfo.series}
+            type="area"
+            width={matches ? 900 : 600}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
