@@ -87,6 +87,7 @@ const AuthRegisterForm = ({ ...others }: { [others: string]: unknown }) => {
           try {
             const req = {
               name: values.name,
+              username: values.name,
               email: values.email,
               password: values.password,
             };

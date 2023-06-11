@@ -1,7 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
+  Avatar,
   Box,
+  ButtonBase,
   Container,
   IconButton,
   Typography,
@@ -20,8 +22,9 @@ import GenreSection from './GenreSection';
 import { scrollToTop } from '@/utils/scrollToTop';
 import useGetListCart from '@/hooks/cart/useGetListCart';
 import NotificationSection from './NotificationSection';
-import useGetNotifications from '@/hooks/notification/useGetNotifications';
-
+import { IconCamera } from '@tabler/icons-react';
+import UserModal from '../modals/UserModal';
+import { FindBookModal } from '../modals/FindBookModal';
 const Header: FC<IHeader> = ({
   handleLeftDrawerToggle,
   hideSidebarIcon = false,
@@ -37,7 +40,7 @@ const Header: FC<IHeader> = ({
   const { data, isLoading, isFetching, refetch } = useGetListCart();
   const matches = useMediaQuery('(min-width:900px)');
   const theme = useTheme();
-
+  const [open, setOpen] = useState(false);
   const onScroll = () => {
     const y = window.scrollY;
     if (y === 0) setShadow(false);
@@ -230,11 +233,41 @@ const Header: FC<IHeader> = ({
           {/* noti section */}
           {!hideNoti && <NotificationSection />}
 
+          {/* search section */}
+          <ButtonBase
+            id="search-book-button"
+            onClick={() => setOpen((i) => !i)}
+            sx={{ borderRadius: '12px' }}
+            className="shadow"
+          >
+            <Avatar
+              variant="rounded"
+              sx={{
+                cursor: 'pointer',
+                borderRadius: theme.spacing(1),
+                width: theme.spacing(4.25),
+                height: theme.spacing(4.25),
+                fontSize: theme.spacing(2.4),
+                transition: 'all .2s ease-in-out',
+                background: theme.palette.primary.light,
+                color: theme.palette.primary.dark,
+                '&[aria-controls="menu-list-grow"],&:hover': {
+                  background: theme.palette.primary.dark,
+                  color: theme.palette.primary.light,
+                },
+              }}
+              color="inherit"
+            >
+              <IconCamera stroke={1.5} size="1.3rem" />
+            </Avatar>
+          </ButtonBase>
+
           {/* profile section */}
           <ProfileSection />
         </Box>
       </Box>
       {!hideBelowSection && <BelowSection />}
+      <FindBookModal isOpen={open} closeModal={() => setOpen((i) => !i)} />
     </Container>
   );
 };
