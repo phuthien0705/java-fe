@@ -41,17 +41,6 @@ const MenuList = () => {
         url: '/admin/author',
         icon: IconUser,
       },
-
-      {
-        title: 'Người dùng',
-        url: '/admin/user',
-        icon: IconUsers,
-      },
-      {
-        title: 'Đơn hàng',
-        url: '/admin/order',
-        icon: IconClipboardCheck,
-      },
     ],
     []
   );

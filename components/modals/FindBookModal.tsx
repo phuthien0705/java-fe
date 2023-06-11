@@ -95,7 +95,6 @@ export const FindBookModal = ({
     <Dialog onClose={handleClose} open={isOpen} maxWidth={'md'}>
       <DialogTitle>
         <div className="flex justify-between items-center gap-4">
-          {' '}
           {isSubmit ? 'Kết quả tìm kiếm' : 'Nhập hình ảnh sản phẩm'}
           {isSubmit ? (
             <Button

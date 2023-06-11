@@ -140,7 +140,7 @@ const ProductCard: React.FunctionComponent<IProductCard> = ({
               <Rating
                 size="small"
                 name="read-only"
-                value={4.5}
+                value={Math.round((product?.rating ?? 0) * 10) / 10}
                 readOnly
                 precision={0.5}
               />

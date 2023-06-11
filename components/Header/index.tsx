@@ -23,7 +23,6 @@ import { scrollToTop } from '@/utils/scrollToTop';
 import useGetListCart from '@/hooks/cart/useGetListCart';
 import NotificationSection from './NotificationSection';
 import { IconCamera } from '@tabler/icons-react';
-import UserModal from '../modals/UserModal';
 import { FindBookModal } from '../modals/FindBookModal';
 const Header: FC<IHeader> = ({
   handleLeftDrawerToggle,
@@ -231,37 +230,47 @@ const Header: FC<IHeader> = ({
             />
           )}
           {/* noti section */}
-          {!hideNoti && <NotificationSection />}
+          {!hideNoti && !router.pathname.includes('/admin') && (
+            <NotificationSection />
+          )}
 
           {/* search section */}
-          <ButtonBase
-            id="search-book-button"
-            onClick={() => setOpen((i) => !i)}
-            sx={{ borderRadius: '12px' }}
-            className="shadow"
-          >
-            <Avatar
-              variant="rounded"
+          {!router.pathname.includes('/admin') && (
+            <Box
               sx={{
-                cursor: 'pointer',
-                borderRadius: theme.spacing(1),
-                width: theme.spacing(4.25),
-                height: theme.spacing(4.25),
-                fontSize: theme.spacing(2.4),
-                transition: 'all .2s ease-in-out',
-                background: theme.palette.primary.light,
-                color: theme.palette.primary.dark,
-                '&[aria-controls="menu-list-grow"],&:hover': {
-                  background: theme.palette.primary.dark,
-                  color: theme.palette.primary.light,
-                },
+                ml: { xs: theme.spacing(0.5), sm: theme.spacing(1) },
+                mr: { xs: theme.spacing(0.5), sm: theme.spacing(1) },
               }}
-              color="inherit"
             >
-              <IconCamera stroke={1.5} size="1.3rem" />
-            </Avatar>
-          </ButtonBase>
-
+              <ButtonBase
+                id="search-book-button"
+                onClick={() => setOpen((i) => !i)}
+                sx={{ borderRadius: '12px' }}
+                className="shadow"
+              >
+                <Avatar
+                  variant="rounded"
+                  sx={{
+                    cursor: 'pointer',
+                    borderRadius: theme.spacing(1),
+                    width: theme.spacing(4.25),
+                    height: theme.spacing(4.25),
+                    fontSize: theme.spacing(2.4),
+                    transition: 'all .2s ease-in-out',
+                    background: theme.palette.primary.light,
+                    color: theme.palette.primary.dark,
+                    '&[aria-controls="menu-list-grow"],&:hover': {
+                      background: theme.palette.primary.dark,
+                      color: theme.palette.primary.light,
+                    },
+                  }}
+                  color="inherit"
+                >
+                  <IconCamera stroke={1.5} size="1.3rem" />
+                </Avatar>
+              </ButtonBase>
+            </Box>
+          )}
           {/* profile section */}
           <ProfileSection />
         </Box>

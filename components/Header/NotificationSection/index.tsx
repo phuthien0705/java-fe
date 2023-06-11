@@ -52,8 +52,8 @@ export default function NotificationSection() {
   return (
     <Box
       sx={{
-        ml: theme.spacing(1),
-        mr: theme.spacing(1),
+        ml: { xs: theme.spacing(0.5), sm: theme.spacing(1) },
+        mr: { xs: theme.spacing(0.5), sm: theme.spacing(1) },
       }}
     >
       <ButtonBase
