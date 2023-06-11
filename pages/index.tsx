@@ -9,6 +9,7 @@ import ProductCardItemsByGenre from '@/components/cards/products/ProductCartItem
 import useGetTopSelling from '@/hooks/book/useGetTopSelling';
 import useGetListGenreClient from '../hooks/genre/useGetListGenreClient';
 import { getHostName } from '@/utils/getHostName';
+import useGetRecommendationHome from '@/hooks/recommendation/useGetRecommendationHome';
 
 const Home = () => {
   const { data: topSelling, isLoading: isTopSellLoading } = useGetTopSelling();
@@ -22,6 +23,15 @@ const Home = () => {
   const description = intl.formatMessage({
     id: 'page.home.head.meta.description',
   });
+
+  const {
+    queryReturn: {
+      data: recommendationData,
+      isLoading: isLoadingRecommendationData,
+    },
+  } = useGetRecommendationHome();
+
+  console.log(recommendationData);
 
   const renderGenres = () => {
     if (!isGenreLoading) {
@@ -94,8 +104,8 @@ const Home = () => {
           >
             <ProductCardItems
               slideToShow={4}
-              isLoading={isTopSellLoading}
-              data={topSelling?.datas ?? []}
+              isLoading={isLoadingRecommendationData}
+              data={recommendationData ?? []}
               title={<p>{<FormattedMessage id="page.home.topselling" />}</p>}
               titleIcon={<LocalFireDepartmentIcon color="error" />}
               titleBackground="#FCDDEF"
