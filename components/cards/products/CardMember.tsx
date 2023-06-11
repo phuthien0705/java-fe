@@ -8,7 +8,7 @@ const CardMember = () => {
           className="shadow"
           variant="outlined"
           sx={{
-            height: '600px',
+            height: '425px',
             maxWidth: 300,
             borderWidth: 1,
           }}
@@ -26,8 +26,6 @@ const CardMember = () => {
             <br />
             <Typography variant="h5">
               <strong>Team: </strong>Back-end
-              <br />
-              <strong>Nhiệm vụ: </strong>
             </Typography>
           </CardContent>
         </Card>
@@ -37,7 +35,7 @@ const CardMember = () => {
           className="shadow"
           variant="outlined"
           sx={{
-            height: '600px',
+            height: '425px',
             maxWidth: 300,
 
             borderWidth: 1,
@@ -56,8 +54,6 @@ const CardMember = () => {
             <br />
             <Typography variant="h5">
               <strong>Team: </strong>Front-end
-              <br />
-              <strong>Nhiệm vụ: </strong> Lập trình giao diện.
             </Typography>
           </CardContent>
         </Card>
@@ -67,7 +63,7 @@ const CardMember = () => {
           variant="outlined"
           className="shadow"
           sx={{
-            height: '600px',
+            height: '425px',
             maxWidth: 300,
             borderWidth: 1,
           }}
@@ -80,13 +76,38 @@ const CardMember = () => {
           />
           <CardContent>
             <Typography gutterBottom variant="h4">
-              Lê Tấn Lộc - 20520584
+              Lê Tấn Lộc - 20520235
             </Typography>
             <br />
             <Typography variant="h5">
               <strong>Team: </strong>Back-end
-              <br />
-              <strong>Nhiệm vụ: </strong>
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>{' '}
+      <Grid item xs={12} sm={6} md={4} lg={3}>
+        <Card
+          variant="outlined"
+          className="shadow"
+          sx={{
+            height: '425px',
+            maxWidth: 300,
+            borderWidth: 1,
+          }}
+        >
+          <CardMedia
+            component="img"
+            image="img/nguyet.jpg"
+            sx={{ height: '300px' }}
+            title="Tấn Lộc"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h4">
+              Vũ Ánh Nguyệt - 19520194
+            </Typography>
+            <br />
+            <Typography variant="h5">
+              <strong>Team: </strong>Back-end
             </Typography>
           </CardContent>
         </Card>
