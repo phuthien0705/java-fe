@@ -6,7 +6,7 @@ export interface IProductInfo {
   isLoading: boolean;
 }
 export interface IProductSlides {
-  slideData: IPaginationResponse<IEachProductData> | undefined;
+  slideData: IEachProductData[] | undefined;
   detailData: IEachProductData | undefined;
   isSlideLoading: boolean;
   isSlideFetching: boolean;
@@ -44,4 +44,6 @@ export interface IEachProductData {
     phone: null | string;
   };
   totalPages: number;
+  rating: number;
+  ratingCount: number;
 }

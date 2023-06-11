@@ -26,3 +26,4 @@ export const REALTED_BOOK = 'realted-book';
 export const NOTIFICATION = 'notification';
 export const RECOMMENDATION_HOME = 'recommendation-home';
 export const BOOK_REVIEW = 'book-review';
+export const RECOMMENDATION_RELATED_BOOK = 'recommendation-related-book';
