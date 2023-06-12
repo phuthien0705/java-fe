@@ -33,6 +33,7 @@ const ResetPasswordForm = ({
     null
   );
   const [showPassword, setShowPassword] = useState(false);
+
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     useState(false);
   const router = useRouter();
@@ -47,6 +48,11 @@ const ResetPasswordForm = ({
   const handleClickShowPasswordConfirmation = () => {
     setShowPasswordConfirmation((i) => !i);
   };
+  const handleMouseDownpasswordConfirmation: MouseEventHandler<
+    HTMLButtonElement
+  > = (event) => {
+    event.preventDefault();
+  };
   return (
     <>
       <Formik
@@ -58,7 +64,7 @@ const ResetPasswordForm = ({
         }}
         validationSchema={Yup.object().shape({
           password: Yup.string()
-            .min(8, 'Mật khẩu phải ít nhất 8 ký tự')
+            .min(6, 'Mật khẩu phải ít nhất 6 ký tự')
             .max(255, 'Mật khẩu tối đa 255 ký tự')
             .required('Mật khẩu là bắt buộc'),
         })}
@@ -149,7 +155,53 @@ const ResetPasswordForm = ({
                 </FormHelperText>
               )}
             </FormControl>
-
+            <FormControl
+              fullWidth
+              error={Boolean(
+                touched.password_confirmation && errors.password_confirmation
+              )}
+              sx={{ ...theme.typography.customInput }}
+            >
+              <InputLabel htmlFor="outlined-adornment-password_confirmation-login">
+                Nhập lại mật khẩu
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password_confirmation-login"
+                type={showPasswordConfirmation ? 'text' : 'password'}
+                value={values.password_confirmation}
+                name="password_confirmation"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password_confirmation visibility"
+                      onClick={handleClickShowPasswordConfirmation}
+                      onMouseDown={handleMouseDownpasswordConfirmation}
+                      edge="end"
+                      size="large"
+                    >
+                      {showPasswordConfirmation ? (
+                        <Visibility />
+                      ) : (
+                        <VisibilityOff />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Mật khẩu"
+                inputProps={{}}
+              />
+              {touched.password_confirmation &&
+                errors.password_confirmation && (
+                  <FormHelperText
+                    error
+                    id="standard-weight-helper-text-password_confirmation-login"
+                  >
+                    {errors.password_confirmation}
+                  </FormHelperText>
+                )}
+            </FormControl>
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
                 <FormHelperText error>{errors.submit}</FormHelperText>
